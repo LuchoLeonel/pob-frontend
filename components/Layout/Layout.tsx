@@ -121,7 +121,9 @@ const Layout = ({ children }: Props) => {
             flexDirection={"column"}
             gap={"42px"}
           >
-            <Heading>Logo</Heading>
+            <Link href={"/"}>
+              <Heading cursor={"pointer"}>Logo</Heading>
+            </Link>
             <Button onClick={newPostModalOnOpen}>Create new post</Button>
             <Box height={"50%"}>
               <Text as="b" fontSize={"xl"}>
@@ -176,21 +178,28 @@ const Layout = ({ children }: Props) => {
               alignSelf={"flex-end"}
               gap="2"
             >
-              <Heading display={{ base: "block", md: "block", lg: "none" }}>
-                Logo
-              </Heading>
+              <Link href={"/"}>
+                <Heading
+                  cursor={"pointer"}
+                  display={{ base: "block", md: "block", lg: "none" }}
+                >
+                  Logo
+                </Heading>
+              </Link>
               <Flex
                 alignItems={"center"}
                 gap={2}
                 display={{ base: "none", md: "none", lg: "flex" }}
               >
                 <Input placeholder="Search" size="lg" w={"300px"} />
-                <IconButton
-                  aria-label="Search database"
-                  w={12}
-                  h={12}
-                  icon={<SearchIcon />}
-                />
+                <Link href={"/search"}>
+                  <IconButton
+                    aria-label="Search database"
+                    w={12}
+                    h={12}
+                    icon={<SearchIcon />}
+                  />
+                </Link>
               </Flex>
               <Box>
                 <HStack m={4} spacing={4}>
@@ -219,9 +228,18 @@ const Layout = ({ children }: Props) => {
               justifyContent={"space-around"}
               alignItems={"center"}
             >
-              <HamburgerIcon w={10} h={10} cursor={"pointer"} />
-              <PlusSquareIcon w={10} h={10} cursor={"pointer"} />
-              <SearchIcon w={10} h={10} cursor={"pointer"} />
+              <Link href={"/section"}>
+                <HamburgerIcon w={10} h={10} cursor={"pointer"} />
+              </Link>
+              <PlusSquareIcon
+                w={10}
+                h={10}
+                cursor={"pointer"}
+                onClick={newPostModalOnOpen}
+              />
+              <Link href={"/search"}>
+                <SearchIcon w={10} h={10} cursor={"pointer"} />
+              </Link>
             </Box>
           </Flex>
         </Flex>
