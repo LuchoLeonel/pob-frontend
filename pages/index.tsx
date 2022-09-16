@@ -15,7 +15,7 @@ import { publicProvider } from "wagmi/providers/public";
 import { useColorMode } from "@chakra-ui/react";
 
 const { chains, provider } = configureChains(
-  [chain.goerli],
+  [chain.polygonMumbai],
   [alchemyProvider({ apiKey: process.env.ALCHEMY_ID }), publicProvider()]
 );
 
