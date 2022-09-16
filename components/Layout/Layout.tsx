@@ -9,6 +9,8 @@ import {
   Text,
   List,
   ListItem,
+  Input,
+  IconButton,
 } from "@chakra-ui/react";
 
 import { ConnectButton } from "@rainbow-me/rainbowkit";
@@ -21,13 +23,12 @@ import {
   SearchIcon,
 } from "@chakra-ui/icons";
 
-import { useAccount } from 'wagmi'
-import {useState, useEffect} from 'react';
+import { useAccount } from "wagmi";
+import { useState, useEffect } from "react";
 import { apolloClient } from "../../api/apollo";
 import { GET_CHALLENGE, AUTHENTICATION } from "../../api/querys";
-import { ethers } from 'ethers'
+import { ethers } from "ethers";
 import { checkStorage, clearStorage } from "../../utils/utils";
-
 
 type Props = {
   children: JSX.Element;
@@ -154,7 +155,7 @@ const Layout = ({ children }: Props) => {
           <Flex
             alignItems="center"
             justifyContent={"space-between"}
-            width={{ base: "100%", md: "100%", lg: "auto" }}
+            width={{ base: "100%", md: "100%", lg: "100%" }}
             height={"90px"}
             paddingLeft={{ base: "20px", md: "20px", lg: "40px" }}
             paddingRight={{ base: "10px", md: "10px", lg: "40px" }}
@@ -164,6 +165,19 @@ const Layout = ({ children }: Props) => {
             <Heading display={{ base: "block", md: "block", lg: "none" }}>
               Logo
             </Heading>
+            <Flex
+              alignItems={"center"}
+              gap={2}
+              display={{ base: "none", md: "none", lg: "flex" }}
+            >
+              <Input placeholder="Search" size="lg" w={"300px"} />
+              <IconButton
+                aria-label="Search database"
+                w={12}
+                h={12}
+                icon={<SearchIcon />}
+              />
+            </Flex>
             <Box>
               <HStack m={4} spacing={4}>
                 <Spacer />
