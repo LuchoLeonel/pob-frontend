@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-}
+  images: {
+    domains: ["https://images.pexels.com", "images.pexels.com"],
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
