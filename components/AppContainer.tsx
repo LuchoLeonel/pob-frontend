@@ -41,7 +41,6 @@ const AppContainer: NextPage = () => {
           likes={18}
           shares={12}
         />
-        <GetPublications />
       </Container>
     </Container>
   );
