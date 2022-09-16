@@ -10,14 +10,9 @@ import {
   List,
   ListItem,
 } from "@chakra-ui/react";
+
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import ThemeSwitcher from "../ThemeSwitcher";
-import { useAccount } from "wagmi";
-import { useState, useEffect, useCallback } from "react";
-import { apolloClient } from "../apollo";
-import { GET_CHALLENGE, AUTHENTICATION } from "../querys";
-import { ethers } from "ethers";
-import { checkStorage, clearStorage } from "../utils";
 import Link from "next/link";
 import {
   AddIcon,
@@ -25,6 +20,14 @@ import {
   PlusSquareIcon,
   SearchIcon,
 } from "@chakra-ui/icons";
+
+import { useAccount } from 'wagmi'
+import {useState, useEffect} from 'react';
+import { apolloClient } from "../../api/apollo";
+import { GET_CHALLENGE, AUTHENTICATION } from "../../api/querys";
+import { ethers } from 'ethers'
+import { checkStorage, clearStorage } from "../../utils/utils";
+
 
 type Props = {
   children: JSX.Element;
