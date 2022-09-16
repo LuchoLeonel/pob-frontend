@@ -1,4 +1,6 @@
 import { extendTheme } from "@chakra-ui/react";
+import FileUpload from "./FileUpload";
+import ImageOptions from "./ImageOptions";
 
 const fonts = {
   body: "sans-serif",
@@ -44,6 +46,8 @@ const components = {
   //     },
   //   },
   // },
+  FileUpload,
+  ImageOptions,
 };
 
 const config = {
