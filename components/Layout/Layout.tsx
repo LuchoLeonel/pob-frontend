@@ -4,11 +4,8 @@ import {
   Heading,
   HStack,
   Spacer,
-  Show,
   Button,
   Text,
-  List,
-  ListItem,
   Input,
   IconButton,
   useDisclosure,
@@ -18,7 +15,6 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import ThemeSwitcher from "../ThemeSwitcher";
 import Link from "next/link";
 import {
-  AddIcon,
   HamburgerIcon,
   PlusSquareIcon,
   SearchIcon,
@@ -124,43 +120,26 @@ const Layout = ({ children }: Props) => {
             <Link href={"/"}>
               <Heading cursor={"pointer"}>Logo</Heading>
             </Link>
-            <Button onClick={newPostModalOnOpen}>Create new post</Button>
+            <Button onClick={newPostModalOnOpen} colorScheme="pink">Publish</Button>
             <Box height={"50%"}>
               <Text as="b" fontSize={"xl"}>
-                Sections
+                Categories
               </Text>
-              <List
-                display={"flex"}
-                flexDirection={"column"}
-                paddingLeft={"12px"}
-                gap={"12px"}
-                marginTop={"12px"}
-              >
-                <ListItem>
-                  <Link href={""}>Section 1</Link>
-                </ListItem>
-                <ListItem>
-                  <Link href={""}>Section 2</Link>
-                </ListItem>
-                <ListItem>
-                  <Link href={""}>Section 3</Link>
-                </ListItem>
-                <ListItem>
-                  <Link href={""}>Section 4</Link>
-                </ListItem>
-                <ListItem>
-                  <Link href={""}>Section 5</Link>
-                </ListItem>
-                <ListItem>
-                  <Link href={""}>Section 6</Link>
-                </ListItem>
-                <ListItem>
-                  <Link href={""}>Section 7</Link>
-                </ListItem>
-              </List>
+              <Box>
+                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Computadoras</Button>
+                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Autos</Button>
+                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Hogar</Button>
+                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Cocina</Button>
+                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Insumos</Button>
+                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Computadoras</Button>
+                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Autos</Button>
+                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Hogar</Button>
+                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Cocina</Button>
+                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Insumos</Button>
+              </Box>
             </Box>
             <Link href={"/movements"}>
-              <Button>My Movements</Button>
+              <Button>History</Button>
             </Link>
           </Flex>
           <Flex
@@ -206,8 +185,8 @@ const Layout = ({ children }: Props) => {
                 <HStack m={4} spacing={4}>
                   <Spacer />
                   {connected && !connectedLens ? (
-                    <Button colorScheme={"teal"} onClick={connecToLens}>
-                      Connect to Lens{" "}
+                    <Button colorScheme="pink.500" onClick={connecToLens}>
+                      Connect to Lens
                     </Button>
                   ) : (
                     <ConnectButton />

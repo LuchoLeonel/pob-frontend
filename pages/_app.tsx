@@ -8,11 +8,12 @@ import {
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
-import { useColorMode } from "@chakra-ui/react";
+import { useColorModeValue } from "@chakra-ui/react";
 import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import { theme } from "../styles/theme";
 import "@rainbow-me/rainbowkit/styles.css";
 import Layout from "../components/Layout/Layout";
+import { FC, ReactNode } from "react";
 
 const { chains, provider } = configureChains(
   [chain.polygonMumbai],
@@ -20,7 +21,7 @@ const { chains, provider } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "My Next + Chakra + RainbowKit App",
+  appName: "Logo",
   chains,
 });
 
@@ -30,21 +31,33 @@ const wagmiClient = createClient({
   provider,
 });
 
+const Web3Provider: FC<{ children: ReactNode }> = ({ children }) => {
+  const rainbowTheme = useColorModeValue(lightTheme, darkTheme);
+
+  return (
+    <WagmiConfig client={wagmiClient}>
+      <RainbowKitProvider
+        chains={chains}
+        theme={rainbowTheme({
+          accentColor: "#d53f8c",
+          borderRadius: "medium",
+        })}
+      >
+        {children}
+      </RainbowKitProvider>
+    </WagmiConfig>
+  );
+};
+
 function MyApp({ Component, pageProps }: AppProps) {
-  const { colorMode } = useColorMode();
   return (
     <ChakraProvider theme={theme}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-      <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider
-          chains={chains}
-          theme={colorMode === "light" ? lightTheme() : darkTheme()}
-        >
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </RainbowKitProvider>
-      </WagmiConfig>
+      <Web3Provider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </Web3Provider>
     </ChakraProvider>
   );
 }

@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { FC } from "react";
+import { Upload } from "upload-js";
 import FileUpload from "./FileUpload";
 import ImageViewer from "./ImageViewer";
 
@@ -41,9 +42,9 @@ const PriceStepper: FC<{
 
   return (
     <HStack maxW="320px">
-      <Button {...dec}>-</Button>
+      <Button colorScheme="pink" {...dec}>-</Button>
       <Input {...{ ...input, value: "MATIC " + v }} />
-      <Button {...inc}>+</Button>
+      <Button colorScheme="pink" {...inc}>+</Button>
     </HStack>
   );
 };
@@ -65,8 +66,21 @@ export const NewPostModal: FC<{
     setValid(title !== "" && description !== "" && files.length > 0);
   }, [title, description, files]);
 
-  const create = () => {
+  const create = async () => {
+
     setIsLoading(true);
+
+    const upload = new Upload({
+      apiKey: "free"
+    });
+
+    const { fileUrl, fileId } = await upload.uploadFile({
+      file: files[0]
+    });
+
+    console.log(fileUrl, fileId);
+
+    setIsLoading(false);
   };
 
   return (
@@ -124,11 +138,11 @@ export const NewPostModal: FC<{
 
         <ModalFooter>
           <Button
-            variant="ghost"
             onClick={create}
             isDisabled={!valid}
             isLoading={loading}
             loadingText={"Loading"}
+            colorScheme="pink"
           >
             Create
           </Button>

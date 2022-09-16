@@ -17,14 +17,14 @@ const colors = {
 };
 
 const styles = {
-  global: {
-    html: {
-      bg: colors.boilerplate.transparent,
-    },
-    body: {
-      bg: colors.boilerplate.transparent,
-    },
-  },
+  // global: {
+  //   html: {
+  //     bg: colors.boilerplate.transparent,
+  //   },
+  //   body: {
+  //     bg: colors.boilerplate.transparent,
+  //   },
+  // },
 };
 
 const breakpoints = {
@@ -51,7 +51,7 @@ const components = {
 };
 
 const config = {
-  initialColorMode: "dark",
+  initialColorMode: "light",
 };
 
 export const theme = extendTheme({

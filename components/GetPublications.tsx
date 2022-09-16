@@ -4,6 +4,7 @@ import { GET_PUBLICATIONS, GET_FOLLOWING, GET_PROFILES_OWNED_BY, CREATE_POST_TYP
 import { apolloClient } from "../api/apollo";
 import { APP_ID } from "../utils/utils";
 import {ethers, utils} from "ethers";
+//@ts-ignore
 import omitDeep from 'omit-deep';
 import { createLensHub } from '../utils/lens-hub';
 
