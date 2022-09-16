@@ -159,8 +159,9 @@ const Layout = ({ children }: Props) => {
                 </ListItem>
               </List>
             </Box>
-            <Button>My Purchases</Button>
-            <Button>My Sells</Button>
+            <Link href={"/movements"}>
+              <Button>My Movements</Button>
+            </Link>
           </Flex>
           <Flex
             flexDirection={"column"}

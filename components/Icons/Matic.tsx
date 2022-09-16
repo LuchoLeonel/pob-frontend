@@ -1,14 +1,22 @@
 import { Box } from "@chakra-ui/react";
 import React from "react";
 
-type Props = {};
+type Props = {
+  w?: number;
+  h?: number;
+  padding?: string;
+};
 
-const Matic = (props: Props) => {
+const Matic = ({ w, h, padding }: Props) => {
   return (
     <Box
-      w={{ base: 4, md: 6, lg: 7 }}
-      h={{ base: 4, md: 6, lg: 7 }}
-      paddingTop={{ base: "2px", md: "5px", lg: "4px", xl: "4px" }}
+      w={w === undefined ? { base: 4, md: 6, lg: 7 } : w}
+      h={h === undefined ? { base: 4, md: 6, lg: 7 } : h}
+      paddingTop={
+        padding === undefined
+          ? { base: "2px", md: "5px", lg: "4px", xl: "4px" }
+          : padding
+      }
     >
       <svg
         id="Layer_1"
