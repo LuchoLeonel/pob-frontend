@@ -10,14 +10,28 @@ import {
   VStack,
   Spinner,
   Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Textarea,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import CommentBox from "../../components/CommentBox";
 import { FcLike, FcShare } from "react-icons/fc";
+import ImageViewer from "../../components/ImageViewer";
+import FileUpload from "../../styles/FileUpload";
 
 type Props = {};
 
@@ -30,13 +44,50 @@ type PublicationData = {
   price: string;
 };
 
-const defaultData = {
-  title: "",
-  description: "",
-  image_url: "",
-  pub_address: "",
-  pub_id: "",
-  price: "",
+export const ConfirmModal: FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  price: string;
+}> = ({ isOpen, onClose, title, price }) => {
+  const [loading, setIsLoading] = useState(false);
+
+  console.log(title, price);
+
+  const buy = () => {
+    setIsLoading(true);
+  };
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      closeOnOverlayClick={!loading}
+      closeOnEsc={!loading}
+    >
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Please, confirm...</ModalHeader>
+        <ModalCloseButton isDisabled={loading} />
+        <ModalBody>
+          {title}: By buying this article, you will be sending MATIC {price} to
+          our smart contract...
+          {loading && <Text>Please confirm the transaction...</Text>}
+        </ModalBody>
+
+        <ModalFooter>
+          <Button
+            variant="ghost"
+            onClick={buy}
+            isLoading={loading}
+            loadingText={"Loading"}
+          >
+            Buy
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
 };
 
 const Publication: NextPage = (props: Props) => {
@@ -46,7 +97,15 @@ const Publication: NextPage = (props: Props) => {
   const [data, setData] = useState<PublicationData>();
   const [loading, setIsLoading] = useState(false);
 
+  const {
+    isOpen: confirmIsOpen,
+    onOpen: confirmOnOpen,
+    onClose: confirmOnClose,
+  } = useDisclosure();
+
   useEffect(() => {
+    if (!router.isReady) return;
+
     (async () => {
       try {
         const response = await fetch(`https://pastebin.com/raw/${id}`);
@@ -81,68 +140,77 @@ const Publication: NextPage = (props: Props) => {
       return (
         <Box key={i} w="full" p="3">
           <Text>...: 23:24, dice:</Text>
-          <Text color="#777">
-            <ReactMarkdown>{e}</ReactMarkdown>
-          </Text>
+
+          <ReactMarkdown>{e}</ReactMarkdown>
         </Box>
       );
     });
 
   return (
-    <Container minW={"100%"} maxH={"85vh"} overflowY={"scroll"}>
-      <Container
-        maxW={{ base: "xl", md: "2xl", lg: "4xl", xl: "5xl", "2xl": "6xl" }}
-        display={"flex"}
-        flexDirection={"column"}
-        alignItems={"flex-start"}
-        gap={"20px"}
-      >
-        <VStack>
-          <HStack>
-            <Image
-              src={
-                data.image_url ||
-                "https://static.wikia.nocookie.net/espokemon/images/7/77/Pikachu.png"
-              }
-              alt="image"
-            />
+    <>
+      {data && (
+        <ConfirmModal
+          isOpen={confirmIsOpen}
+          onClose={confirmOnClose}
+          title={data.title}
+          price={data.price}
+        />
+      )}
+      <Container minW={"100%"} maxH={"85vh"} overflowY={"scroll"}>
+        <Container
+          maxW={{ base: "xl", md: "2xl", lg: "4xl", xl: "5xl", "2xl": "6xl" }}
+          display={"flex"}
+          flexDirection={"column"}
+          alignItems={"flex-start"}
+          gap={"20px"}
+        >
+          <VStack>
+            <HStack>
+              <Image
+                src={
+                  data.image_url ||
+                  "https://static.wikia.nocookie.net/espokemon/images/7/77/Pikachu.png"
+                }
+                alt="image"
+              />
 
+              <Box>
+                <Text fontSize="xl" textTransform="uppercase">
+                  {data.title}
+                </Text>
+                <Text>{data.price}</Text>
+                <Text>{data.pub_address} @ proof of humanity</Text>
+
+                <HStack mt="5">
+                  <Button onClick={confirmOnOpen}>BUY</Button>
+                  <Spacer />
+                  <Text>
+                    <Icon as={FcLike} /> 114
+                  </Text>
+                  <Text>
+                    <Icon as={FcShare} /> 114
+                  </Text>
+                </HStack>
+              </Box>
+            </HStack>
             <Box>
-              <Text fontSize="xl" textTransform="uppercase">
-                {data.title}
-              </Text>
-              <Text>{data.price}</Text>
-              <Text>{data.pub_address} @ proof of humanity</Text>
+              <Text>{data.description}</Text>
 
-              <HStack mt="5">
-                <Button>BUY</Button>
+              <HStack>
                 <Spacer />
-                <Text>
-                  <Icon as={FcLike} /> 114
-                </Text>
-                <Text>
-                  <Icon as={FcShare} /> 114
-                </Text>
+                <Button variant="outline">Like</Button>
+                <Button variant="outline">Share</Button>
               </HStack>
             </Box>
-          </HStack>
-          <Box>
-            <Text>{data.description}</Text>
 
-            <HStack>
-              <Spacer />
-              <Button variant="outline">Like</Button>
-              <Button variant="outline">Share</Button>
-            </HStack>
-          </Box>
-
-          <VStack w="full">
-            <>{comments}</>
-            <CommentBox />
+            <VStack w="full">
+              <>{comments}</>
+              <CommentBox />
+            </VStack>
           </VStack>
-        </VStack>
+        </Container>
       </Container>
-    </Container>
+    </>
   );
 };
 
