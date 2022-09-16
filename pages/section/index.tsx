@@ -1,4 +1,4 @@
-import { Container, Heading, List, ListItem } from "@chakra-ui/react";
+import { Button, Container, Heading, List, ListItem } from "@chakra-ui/react";
 import { NextPage } from "next";
 import Link from "next/link";
 
@@ -44,6 +44,9 @@ const Section: NextPage = (props: Props) => {
             <Link href={""}>Section 7</Link>
           </ListItem>
         </List>
+        <Link href={"/movements"}>
+          <Button>My Movements</Button>
+        </Link>
       </Container>
     </Container>
   );
