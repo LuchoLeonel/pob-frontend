@@ -1,5 +1,5 @@
-import { apolloClient } from "./apollo";
-import { VERIFY, REFRESH_AUTHENTICATION } from "./querys";
+import { apolloClient } from "../api/apollo";
+import { VERIFY, REFRESH_AUTHENTICATION } from "../api/querys";
 
 export const checkStorage = async () => {
     const accessToken = localStorage.getItem("accessToken");

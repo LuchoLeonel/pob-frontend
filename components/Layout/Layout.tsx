@@ -1,13 +1,13 @@
-import { Box, Flex, Heading, HStack, Spacer, Show } from "@chakra-ui/react";
+import { Box, Flex, Heading, HStack, Spacer } from "@chakra-ui/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { NextComponentType } from "next";
 import ThemeSwitcher from "../ThemeSwitcher";
 import { useAccount } from 'wagmi'
-import {useState, useEffect, useCallback} from 'react';
-import { apolloClient } from "../apollo";
-import { GET_CHALLENGE, AUTHENTICATION } from "../querys";
+import {useState, useEffect} from 'react';
+import { apolloClient } from "../../api/apollo";
+import { GET_CHALLENGE, AUTHENTICATION } from "../../api/querys";
 import { ethers } from 'ethers'
-import { checkStorage, clearStorage } from "../utils";
+import { checkStorage, clearStorage } from "../../utils/utils";
 
 
 type Props = {
