@@ -1,6 +1,8 @@
 import { apolloClient } from "../api/apollo";
 import { VERIFY, REFRESH_AUTHENTICATION } from "../api/querys";
 
+export const APP_ID = "lenster";
+
 export const checkStorage = async () => {
     const accessToken = localStorage.getItem("accessToken");
     const refreshToken = localStorage.getItem("refreshToken");
@@ -35,7 +37,7 @@ export const verifyAccessToken = async () => {
         },
       })
 
-    return verify.data.verify;
+    return verify?.data?.verify;
 }
 
 export const refreshAccessToken = async () => {
