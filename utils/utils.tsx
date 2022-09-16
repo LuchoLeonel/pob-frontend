@@ -1,6 +1,12 @@
 import { apolloClient } from "../api/apollo";
 import { VERIFY, REFRESH_AUTHENTICATION } from "../api/querys";
 
+export type CustomHook<P, Q> = (p: P) => Q;
+
+export const MAX_AMOUNT_IMAGES = 10;
+export const WIDTH_PX = 300;
+export const HEIGHT_PX = 300;
+
 export const checkStorage = async () => {
     const accessToken = localStorage.getItem("accessToken");
     const refreshToken = localStorage.getItem("refreshToken");
