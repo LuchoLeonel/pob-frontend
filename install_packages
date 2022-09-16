@@ -1,0 +1,3 @@
+pnpm create next-app --ts
+cd web3-next-boilerplate/
+pnpm install @chakra-ui/react @emotion/react @emotion/styled framer-motion @chakra-ui/styled-system @chakra-ui/icons @rainbow-me/rainbowkit wagmi ethers dotenv
