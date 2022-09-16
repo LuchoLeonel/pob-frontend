@@ -13,6 +13,7 @@ import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import { useColorMode } from "@chakra-ui/react";
+import Layout from "../components/Layout/Layout";
 
 const { chains, provider } = configureChains(
   [chain.goerli],
@@ -38,7 +39,9 @@ const Home: NextPage = () => {
         chains={chains}
         theme={colorMode === "light" ? lightTheme() : darkTheme()}
       >
-        <AppContainer />
+        <Layout>
+          <AppContainer />
+        </Layout>
       </RainbowKitProvider>
     </WagmiConfig>
   );
