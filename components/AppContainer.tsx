@@ -1,6 +1,7 @@
 import { NextPage } from "next";
-import { Container, Heading, Text } from "@chakra-ui/react";
+import { Container } from "@chakra-ui/react";
 import CardPost from "./CardPost/CardPost";
+import GetPublications from "./GetPublications";
 
 const AppContainer: NextPage = () => {
   return (
@@ -40,6 +41,7 @@ const AppContainer: NextPage = () => {
           likes={18}
           shares={12}
         />
+        <GetPublications />
       </Container>
     </Container>
   );

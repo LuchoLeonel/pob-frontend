@@ -6,6 +6,7 @@ export type CustomHook<P, Q> = (p: P) => Q;
 export const MAX_AMOUNT_IMAGES = 10;
 export const WIDTH_PX = 300;
 export const HEIGHT_PX = 300;
+export const APP_ID = "lenster";
 
 export const checkStorage = async () => {
     const accessToken = localStorage.getItem("accessToken");
@@ -41,7 +42,7 @@ export const verifyAccessToken = async () => {
         },
       })
 
-    return verify.data.verify;
+    return verify?.data?.verify;
 }
 
 export const refreshAccessToken = async () => {

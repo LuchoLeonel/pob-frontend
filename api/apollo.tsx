@@ -1,8 +1,30 @@
-import {ApolloClient, InMemoryCache} from '@apollo/client';
+import {ApolloClient, InMemoryCache, createHttpLink} from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { clearStorage } from '../utils/utils';
+import { GET_PROFILES_OWNED_BY} from "../api/querys";
 
-const APIURL = "https://api-mumbai.lens.dev";
+const API_URL = "https://api-mumbai.lens.dev";
+
+const authLink = setContext((_, { headers }) => {
+  const accessToken = localStorage.getItem('accessToken')
+  if (!accessToken || accessToken === 'undefined') {
+    clearStorage();
+    return;
+  }
+
+  return {
+    headers: {
+      ...headers,
+      authorization: accessToken ? `Bearer ${accessToken}` : "",
+    }
+  }
+});
+
+const httpLink = createHttpLink({
+  uri: API_URL,
+});
 
 export const apolloClient= new ApolloClient({
-  uri: APIURL,
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 })
