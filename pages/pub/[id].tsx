@@ -30,13 +30,22 @@ import { FcLike, FcShare } from "react-icons/fc";
 import ImageViewer from "../../components/ImageViewer";
 import FileUpload from "../../styles/FileUpload";
 import { BACKEND_URL } from "../../utils/utils";
+import {ethers} from 'ethers';
+import abi from '../../utils/abi.json';
+import {getSigner} from '../../utils/ethers-service'
+import { useAccount } from 'wagmi'
+import { GET_PROFILES_OWNED_BY } from "../../api/querys";
+import { apolloClient } from "../../api/apollo";
+
+
+declare var window: any;
 
 type Props = {};
 
 type PublicationData = {
     id: string;
     profileId: string;
-    postLensId: string;
+    postLensID: string;
     section: string;
     title: string;
     price: string;
@@ -49,14 +58,59 @@ export const ConfirmModal: FC<{
   onClose: () => void;
   title: string;
   price: string;
-}> = ({ isOpen, onClose, title, price }) => {
+  postLensId: string;
+}> = ({ isOpen, onClose, title, price, postLensId }) => {
   const [loading, setIsLoading] = useState(false);
+  const { address, isConnected } = useAccount()
+
+
 
   console.log(title, price);
 
-  const buy = () => {
+  const buy = async () => {
+    console.log(postLensId)
+
     setIsLoading(true);
+    await ConnectScrow()
+    setIsLoading(false);
   };
+
+  const ConnectScrow = async () => {
+    const profile = await getProfile();
+    const profileId = profile[0].id;
+    const CONTRACT_SCROW_ADDRESS = "0x3F176e748068C96284f4626a27a19Ad1843C11Ca"
+    const ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
+    const contractScrow = new ethers.Contract(
+      CONTRACT_SCROW_ADDRESS,
+      abi,
+      getSigner(ethersProvider)
+    )
+    console.log(price, profileId, postLensId, address)
+    const priceInWei = ethers.utils.parseEther(price.toString());
+    console.log(priceInWei);
+    let response = await contractScrow.buy(
+      profileId,
+      postLensId,
+      address,
+      {value: priceInWei, gasLimit: 100000},
+    );
+    console.log(response);
+  }
+
+  const getProfile = async () => {
+    const response = await apolloClient.query({
+        query: GET_PROFILES_OWNED_BY,
+        variables: {
+            request:{ 
+                ownedBy: address,
+                limit: 1,
+            }
+        },
+      });
+    let data = response.data.profiles.items;
+
+    return data;
+}
 
   return (
     <Modal
@@ -154,6 +208,7 @@ const Publication: NextPage = (props: Props) => {
           onClose={confirmOnClose}
           title={data.title}
           price={data.price}
+          postLensId={data.postLensID}
         />
       )}
       <Container minW={"100%"} maxH={"85vh"} overflowY={"scroll"}>
