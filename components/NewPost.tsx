@@ -230,10 +230,23 @@ const createPublication = async (id, description) => {
     return length;
 }*/
 
+  function cleanClose() {
+    setTitle("");
+    setDescription("");
+    setPrice(0.01);
+    setFiles([]);
+  
+    setValid(false);
+    setIsLoading(false);
+    setDoneInfo();
+ 
+    onClose();
+  }
+
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={cleanClose}
       closeOnOverlayClick={!loading}
       closeOnEsc={!loading}
     >
