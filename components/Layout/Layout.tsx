@@ -27,6 +27,7 @@ import { GET_CHALLENGE, AUTHENTICATION } from "../../api/querys";
 import { ethers } from "ethers";
 import { checkStorage, clearStorage } from "../../utils/utils";
 import NewPostModal from "../NewPost";
+import LogoIcon from "../Icons/Logo";
 
 type Props = {
   children: JSX.Element;
@@ -118,9 +119,11 @@ const Layout = ({ children }: Props) => {
             gap={"42px"}
           >
             <Link href={"/"}>
-              <Heading cursor={"pointer"}>Logo</Heading>
+              <Heading cursor={"pointer"}>
+                <LogoIcon width="200px" height="84px"/>
+              </Heading>
             </Link>
-            <Button onClick={newPostModalOnOpen} colorScheme="pink">Publish</Button>
+            <Button onClick={newPostModalOnOpen} colorScheme="pink" isDisabled={!isConnected}>Publish</Button>
             <Box height={"50%"}>
               <Text as="b" fontSize={"xl"}>
                 Categories
@@ -138,9 +141,9 @@ const Layout = ({ children }: Props) => {
                   <Button size="xs" m="1" colorScheme="pink" variant="outline">Insumos</Button>
               </Box>
             </Box>
-            <Link href={"/movements"}>
+            {isConnected && <Link href={"/movements"}>
               <Button>History</Button>
-            </Link>
+            </Link>}
           </Flex>
           <Flex
             flexDirection={"column"}
@@ -161,9 +164,9 @@ const Layout = ({ children }: Props) => {
               <Link href={"/"}>
                 <Heading
                   cursor={"pointer"}
-                  display={{ base: "block", md: "block", lg: "none" }}
+                  display={{ base: "flex", md: "flex", lg: "none" }}
                 >
-                  Logo
+                <LogoIcon width="200px" height="84px"/>
                 </Heading>
               </Link>
               <Flex
@@ -185,7 +188,7 @@ const Layout = ({ children }: Props) => {
                 <HStack m={4} spacing={4}>
                   <Spacer />
                   {connected && !connectedLens ? (
-                    <Button colorScheme="pink.500" onClick={connecToLens}>
+                    <Button colorScheme="pink" onClick={connecToLens}>
                       Connect to Lens
                     </Button>
                   ) : (
