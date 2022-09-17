@@ -74,6 +74,8 @@ const AppContainer: NextPage = () => {
         display={"flex"}
         flexDirection={"column"}
         alignItems={"center"}
+        gap={"24px"}
+        paddingY={"20px"}
       >
         <>
           {publications.length > 0 &&

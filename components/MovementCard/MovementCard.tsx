@@ -1,5 +1,12 @@
 import { CheckIcon, DownloadIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Image,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Matic from "../Icons/Matic";
@@ -33,6 +40,9 @@ const MovementCard = ({
     loading: false,
   };
 
+  const backgroundColor = useColorModeValue("#bfcbc2", "#2c302e");
+  const lensHandleColor = useColorModeValue("#537a5a", "#9ae19d");
+  const witheBlack = useColorModeValue("black", "white");
   const [buttonState, setButtonState] = useState(initialButtonState);
 
   const handleClickButton = () => {
@@ -52,7 +62,10 @@ const MovementCard = ({
       h={"250px"}
       justifyContent={"space-around"}
       alignItems={"center"}
-      border={"2px solid black"}
+      backgroundColor={backgroundColor}
+      borderRadius={"4px"}
+      boxShadow={"3px 3px 10px 0px rgba(0,0,0,0.71);"}
+      marginY={"30px"}
     >
       <Flex flexDirection={"column"} w={"15%"}>
         <Text as={"b"}>{title}</Text>

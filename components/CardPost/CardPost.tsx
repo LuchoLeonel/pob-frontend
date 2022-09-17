@@ -1,5 +1,13 @@
 import { RepeatClockIcon, StarIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, IconButton, Image, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  IconButton,
+  Image,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import Matic from "../Icons/Matic";
 
@@ -29,6 +37,10 @@ const CardPost = ({
   const [liked, setLiked] = useState(false);
   const [shared, setShared] = useState(false);
 
+  const backgroundColor = useColorModeValue("#bfcbc2", "#2c302e");
+  const lensHandleColor = useColorModeValue("#537a5a", "#9ae19d");
+  const witheBlack = useColorModeValue("black", "white");
+
   useEffect(() => {
     if (newLiked) {
       setLiked(newLiked);
@@ -37,17 +49,18 @@ const CardPost = ({
       setShared(newShared);
     }
   }, []);
-  
+
   return (
     <Box
       width={{ base: "4xs", md: "xl", lg: "2xl", xl: "3xl" }}
-      backgroundColor={"#2c302e"}
+      backgroundColor={backgroundColor}
       paddingY={"40px"}
       paddingX={{ base: "20px", md: "0px", lg: "20px" }}
       display={"flex"}
       flexDirection={"column"}
       alignItems={"center"}
-      borderBottom={"1px solid #909590"}
+      borderRadius={"2%"}
+      boxShadow={"3px 3px 16px 0px rgba(0,0,0,0.71);"}
     >
       <Flex
         alignItems={"center"}
@@ -55,6 +68,7 @@ const CardPost = ({
         paddingLeft={"20px"}
         gap={"10px"}
         marginBottom={"16px"}
+        cursor={"pointer"}
       >
         <Image
           boxSize={{ base: "10" }}
@@ -63,7 +77,7 @@ const CardPost = ({
           alt="example"
           src={image}
         />
-        <Text color={"teal.500"}>{user}</Text>
+        <Text color={lensHandleColor}>{user}</Text>
       </Flex>
 
       <Image
@@ -71,6 +85,10 @@ const CardPost = ({
         objectFit={"cover"}
         alt="example"
         src={image}
+        cursor="pointer"
+        filter="auto"
+        transition={"ease-in-out 0.25s"}
+        _hover={{ brightness: "60%" }}
       />
       <Flex
         justifyContent={"space-between"}
@@ -101,11 +119,11 @@ const CardPost = ({
           <Box
             borderRadius={"100%"}
             border={"1px solid"}
-            borderColor={liked ? "gold" : "transparent"}
+            borderColor={liked ? lensHandleColor : "transparent"}
             paddingY={"8px"}
             paddingX={"12px"}
-            color={liked ? "gold" : "black"}
-            _hover={{ color: "gold", borderColor: "gold" }}
+            color={liked ? lensHandleColor : witheBlack}
+            _hover={{ color: lensHandleColor, borderColor: lensHandleColor }}
             cursor={"pointer"}
             onClick={() => setLiked(!liked)}
             transition={"ease-in-out 0.25s"}
@@ -121,7 +139,7 @@ const CardPost = ({
             borderColor={shared ? "pink" : "transparent"}
             paddingY={"8px"}
             paddingX={"12px"}
-            color={shared ? "pink" : "black"}
+            color={shared ? "pink" : witheBlack}
             _hover={{ color: "pink", borderColor: "pink" }}
             cursor={"pointer"}
             onClick={() => setShared(!shared)}
