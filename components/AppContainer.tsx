@@ -2,10 +2,29 @@ import { NextPage } from "next";
 import { Container } from "@chakra-ui/react";
 import CardPost from "./CardPost/CardPost";
 import GetPublications from "./GetPublications";
-import {sendToIPFS} from '../api/ipfs';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
+import {BACKEND_URL} from '../utils/utils';
+
+type Publications = any;
 
 const AppContainer: NextPage = () => {
+  const [publications, setPublications] = useState(Array<Publications>);
+
+  useEffect(() => {
+      getDatabasePosts();
+
+    console.log(publications)
+  },[]);
+
+  const getDatabasePosts = () => {
+    const url = BACKEND_URL + "/posts";
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.data);
+        setPublications(data.data)
+      });
+  }
 
   return (
     <Container minW={"100%"} maxH={"85vh"} overflowY={"scroll"}>
@@ -15,40 +34,22 @@ const AppContainer: NextPage = () => {
         flexDirection={"column"}
         alignItems={"center"}
       >
-        <CardPost
-          user={"manolo.lens"}
-          image="https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          title="Mercedes Benz 2021"
-          price={25.0}
-          likes={18}
-          shares={12}
-        />
-        <CardPost
-          user={"manolo.lens"}
-          image="https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          title="Mercedes Benz 2021"
-          price={25.0}
-          likes={18}
-          shares={12}
-        />{" "}
-        <CardPost
-          user={"manolo.lens"}
-          image="https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          title="Mercedes Benz 2021"
-          price={25.0}
-          likes={18}
-          shares={12}
-        />{" "}
-        <CardPost
-          user={"manolo.lens"}
-          image="https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          title="Mercedes Benz 2021"
-          price={25.0}
-          likes={18}
-          shares={12}
-        />
+        <>
+        
+        {publications.length > 0 && publications.map((pub) => 
+          <CardPost
+            key={pub.postLensID}
+            user={"manolo.lens"}
+            image={pub.image}
+            title={pub.title}
+            price={pub.price}
+            likes={18}
+            shares={12}
+          />
+        )}
+      </>
+
       </Container>
-      < GetPublications />
     </Container>
   );
 };

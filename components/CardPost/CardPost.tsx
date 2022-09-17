@@ -37,7 +37,7 @@ const CardPost = ({
       setShared(newShared);
     }
   }, []);
-
+  
   return (
     <Box
       width={{ base: "4xs", md: "xl", lg: "2xl", xl: "3xl" }}
