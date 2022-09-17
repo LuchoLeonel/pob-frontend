@@ -2,8 +2,8 @@ import { NextPage } from "next";
 import { Container } from "@chakra-ui/react";
 import CardPost from "./CardPost/CardPost";
 import GetPublications from "./GetPublications";
-import { useEffect, useState } from 'react';
-import {BACKEND_URL} from '../utils/utils';
+import { useEffect, useState } from "react";
+import { BACKEND_URL } from "../utils/utils";
 
 type Publications = any;
 
@@ -11,20 +11,22 @@ const AppContainer: NextPage = () => {
   const [publications, setPublications] = useState(Array<Publications>);
 
   useEffect(() => {
-      getDatabasePosts();
+    getDatabasePosts();
 
-    console.log(publications)
-  },[]);
+    console.log(publications);
+  }, []);
 
-  const getDatabasePosts = () => {
+  const getDatabasePosts = async () => {
     const url = BACKEND_URL + "/posts";
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.data);
-        setPublications(data.data)
-      });
-  }
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      setPublications(data.data);
+    } catch (error) {
+      console.log(error);
+      alert("Something went wrong.");
+    }
+  };
 
   return (
     <Container minW={"100%"} maxH={"85vh"} overflowY={"scroll"}>
@@ -35,20 +37,19 @@ const AppContainer: NextPage = () => {
         alignItems={"center"}
       >
         <>
-        
-        {publications.length > 0 && publications.map((pub) => 
-          <CardPost
-            key={pub.postLensID}
-            user={"manolo.lens"}
-            image={pub.image}
-            title={pub.title}
-            price={pub.price}
-            likes={18}
-            shares={12}
-          />
-        )}
-      </>
-
+          {publications.length > 0 &&
+            publications.map((pub) => (
+              <CardPost
+                key={pub.postLensID}
+                user={"manolo.lens"}
+                image={pub.image}
+                title={pub.title}
+                price={pub.price}
+                likes={18}
+                shares={12}
+              />
+            ))}
+        </>
       </Container>
     </Container>
   );
