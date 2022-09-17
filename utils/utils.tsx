@@ -64,3 +64,6 @@ export const refreshAccessToken = async () => {
     localStorage.setItem("refreshToken", refreshed.data.refresh.refreshToken);
     return true;
   }
+
+
+export const BACKEND_URL = "http://localhost:4000"

@@ -17,8 +17,22 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { FC } from "react";
+import { Upload } from "upload-js";
 import FileUpload from "./FileUpload";
 import ImageViewer from "./ImageViewer";
+import {BACKEND_URL, checkStorage} from '../utils/utils'; 
+import { GET_PROFILES_OWNED_BY, CREATE_POST_TYPED_DATA, GET_PUBLICATIONS } from "../api/querys";
+import { apolloClient } from "../api/apollo";
+import { useAccount } from 'wagmi'
+import {ethers, utils} from "ethers";
+//@ts-ignore
+import omitDeep from 'omit-deep';
+import { createLensHub } from '../utils/lens-hub';
+import {sendToIPFS} from '../api/ipfs';
+
+
+declare var window: any;
+
 
 const PriceStepper: FC<{
   onChange: (value: number) => void;
@@ -41,9 +55,9 @@ const PriceStepper: FC<{
 
   return (
     <HStack maxW="320px">
-      <Button {...dec}>-</Button>
+      <Button colorScheme="pink" {...dec}>-</Button>
       <Input {...{ ...input, value: "MATIC " + v }} />
-      <Button {...inc}>+</Button>
+      <Button colorScheme="pink" {...inc}>+</Button>
     </HStack>
   );
 };
@@ -53,6 +67,7 @@ export const NewPostModal: FC<{
   onOpen: () => void;
   onClose: () => void;
 }> = ({ isOpen, onOpen, onClose }) => {
+  const { address, isConnected } = useAccount()
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0.01);
@@ -65,9 +80,134 @@ export const NewPostModal: FC<{
     setValid(title !== "" && description !== "" && files.length > 0);
   }, [title, description, files]);
 
-  const create = () => {
+  const create = async () => {
     setIsLoading(true);
+
+    const upload = new Upload({
+      apiKey: "free"
+    });
+
+    const { fileUrl, fileId } = await upload.uploadFile({
+      file: files[0]
+    });
+    console.log(fileUrl, fileId);
+    
+
+    const user = await getProfile();
+    if (!user) { return }
+    console.log(user);
+    await createPublication(user);
+    const publicationsLenght = await getPublicationsLenght(user);
+
+    const url = BACKEND_URL + "/post";
+    const options = {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        title: title.toString(),
+        price,
+        image: fileUrl,
+        profileID: user,
+        postLensID: publicationsLenght - 1,
+        section: "Automoviles",
+      }),
+    }
+
+    const response = await fetch(url, options);
+
+    console.log(response);
+
+    setIsLoading(false);
   };
+
+  const getProfile = async () => {
+    if (!isConnected || !checkStorage()) { return }
+    const response = await apolloClient.query({
+        query: GET_PROFILES_OWNED_BY,
+        variables: {
+            request:{ 
+                ownedBy: address,
+                limit: 1,
+            }
+        },
+      });
+      let data = response.data.profiles.items;
+      if (data.length == 0) { return };
+      return data[0].id;
+  }
+
+
+ const signedTypeData = async (domain, types, value) => {
+  const ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = await ethersProvider.getSigner()
+  // remove the __typedname from the signature!
+  return signer._signTypedData(
+    omitDeep(domain, '__typename'),
+    omitDeep(types, '__typename'),
+    omitDeep(value, '__typename')
+  );
+}
+
+const splitSignature = (signature) => {
+  return utils.splitSignature(signature)
+}
+
+const createPublication = async (id) => {
+
+    const ipfsUrl = await sendToIPFS();
+    console.log(ipfsUrl)
+    const response = await apolloClient.mutate({
+      mutation: CREATE_POST_TYPED_DATA,
+      variables: {
+        request: {
+          profileId: id,
+          contentURI: ipfsUrl,
+          collectModule: {
+            freeCollectModule: { followerOnly: false }
+        },
+        referenceModule: {
+            followerOnlyReferenceModule: true
+        }
+        }
+      },
+    });
+    const typedData = response.data.createPostTypedData.typedData;
+    const signature = await signedTypeData(typedData.domain, typedData.types, typedData.value);
+    const { v, r, s } = splitSignature(signature);
+    const ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
+    
+    const lensHub = createLensHub(ethersProvider);
+    const tx = await lensHub.postWithSig({
+      profileId: typedData.value.profileId,
+      contentURI:typedData.value.contentURI,
+      collectModule: typedData.value.collectModule,
+      collectModuleInitData: typedData.value.collectModuleInitData,
+      referenceModule: typedData.value.referenceModule,
+      referenceModuleInitData: typedData.value.referenceModuleInitData,
+      sig: {
+        v,
+        r,
+        s,
+        deadline: typedData.value.deadline,
+      },
+    });
+    console.log(tx.hash);
+    return;
+  }
+
+  const getPublicationsLenght = async (id) => {
+      const response = await apolloClient.query({
+        query: GET_PUBLICATIONS,
+        variables: {
+          request: {
+            profileId: id,
+            publicationTypes: ["POST", "COMMENT","MIRROR"],
+            limit: 10
+          }
+        },
+      });
+    return response.data.publications.items.length;
+}
 
   return (
     <Modal
@@ -124,11 +264,11 @@ export const NewPostModal: FC<{
 
         <ModalFooter>
           <Button
-            variant="ghost"
             onClick={create}
             isDisabled={!valid}
             isLoading={loading}
             loadingText={"Loading"}
+            colorScheme="pink"
           >
             Create
           </Button>

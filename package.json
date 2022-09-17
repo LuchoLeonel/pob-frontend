@@ -19,6 +19,9 @@
     "dotenv": "^16.0.2",
     "ethers": "^5.7.1",
     "framer-motion": "^7.3.5",
+    "ipfs-core": "^0.16.0",
+    "ipfs-http-client": "^58.0.0",
+    "js-ipfs": "^0.0.301",
     "next": "12.3.0",
     "omit-deep": "^0.3.0",
     "react": "18.2.0",
@@ -26,6 +29,7 @@
     "react-icons": "^4.4.0",
     "react-markdown": "^8.0.3",
     "react-uuid": "^1.0.3",
+    "upload-js": "^1.48.21",
     "uuid": "^9.0.0",
     "wagmi": "^0.6.6"
   },

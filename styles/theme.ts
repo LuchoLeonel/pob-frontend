@@ -13,18 +13,19 @@ const colors = {
     transparent: "transparent",
     black: "black",
     white: "white",
+    gold: "#D69E2E",
   },
 };
 
 const styles = {
-  global: {
-    html: {
-      bg: colors.boilerplate.transparent,
-    },
-    body: {
-      bg: colors.boilerplate.transparent,
-    },
-  },
+  // global: {
+  //   html: {
+  //     bg: colors.boilerplate.transparent,
+  //   },
+  //   body: {
+  //     bg: colors.boilerplate.transparent,
+  //   },
+  // },
 };
 
 const breakpoints = {
@@ -51,7 +52,7 @@ const components = {
 };
 
 const config = {
-  initialColorMode: "dark",
+  initialColorMode: "light",
 };
 
 export const theme = extendTheme({

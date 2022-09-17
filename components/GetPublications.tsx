@@ -4,9 +4,10 @@ import { GET_PUBLICATIONS, GET_FOLLOWING, GET_PROFILES_OWNED_BY, CREATE_POST_TYP
 import { apolloClient } from "../api/apollo";
 import { APP_ID } from "../utils/utils";
 import {ethers, utils} from "ethers";
+//@ts-ignore
 import omitDeep from 'omit-deep';
 import { createLensHub } from '../utils/lens-hub';
-import { v4 as uuidv4 } from 'uuid';
+import {sendToIPFS} from '../api/ipfs';
 
 
 type Following = any;
@@ -28,12 +29,11 @@ const GetPublications = () => {
           await getPublications(profiles[0].profile.id);
           let use = await getProfile();
           console.log(use[0].id);
-          console.log("unique id" + uuidv4());/*
-          if (!publicMade) {
+          /*if (!publicMade) {
             await createPublication(use[0].id);
             setPublicMade(true);
-          }
-*/
+          }*/
+
 
           await getPublications(use[0].id);
         }
@@ -105,12 +105,15 @@ const splitSignature = (signature) => {
 }
 
 const createPublication = async (id) => {
+
+    const ipfsUrl = await sendToIPFS();
+    console.log(ipfsUrl)
     const response = await apolloClient.mutate({
       mutation: CREATE_POST_TYPED_DATA,
       variables: {
         request: {
           profileId: id,
-          contentURI: "https://pastebin.com/raw/R0EpyJM0",
+          contentURI: ipfsUrl,
           collectModule: {
             freeCollectModule: { followerOnly: false }
         },

@@ -10,11 +10,11 @@ type Props = {
 const Matic = ({ w, h, padding }: Props) => {
   return (
     <Box
-      w={w === undefined ? { base: 4, md: 6, lg: 7 } : w}
-      h={h === undefined ? { base: 4, md: 6, lg: 7 } : h}
+      w={w === undefined ? { base: 4, md: 6 } : w}
+      h={h === undefined ? { base: 4, md: 6 } : h}
       paddingTop={
         padding === undefined
-          ? { base: "2px", md: "5px", lg: "4px", xl: "4px" }
+          ? { base: "2px", md: "5px", lg: "4px", xl: "6px" }
           : padding
       }
     >
