@@ -267,12 +267,12 @@ export async function getStaticProps({ params }: { params: any }) {
   const publicationId = data.profileID + "-" + parsedPublicationId;
   const responseGraphQL = await getPublication(publicationId);
   const publicationInfo = responseGraphQL.data.publication;
-  data.mirrors = publicationInfo?.mirrors?.length;
+  data.mirrors = publicationInfo?.mirrors?.length === undefined ? 0 : publicationInfo?.mirrors?.length;
   data.description =
     publicationInfo?.description !== undefined
       ? publicationInfo?.description
       : null;
-  data.lensProfile = publicationInfo?.profile?.handle;
+  data.lensProfile = publicationInfo?.profile?.handle || null;
 
   console.log(data);
 

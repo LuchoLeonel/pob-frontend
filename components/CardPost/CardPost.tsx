@@ -103,7 +103,7 @@ const CardPost = ({
         <Image
           boxSize={{ base: "10" }}
           borderRadius={"100%"}
-          objectFit={"cover"}
+          objectFit={"contain"}
           alt="example"
           src={image}
         />

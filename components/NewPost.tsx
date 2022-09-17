@@ -151,7 +151,7 @@ export const NewPostModal: FC<{
   }
 
 
- const signedTypeData = async (domain, types, value) => {
+ const signedTypeData = async (domain: any, types: any, value: any) => {
   const ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = await ethersProvider.getSigner()
   // remove the __typedname from the signature!
@@ -162,13 +162,13 @@ export const NewPostModal: FC<{
   );
 }
 
-const splitSignature = (signature) => {
+const splitSignature = (signature: any) => {
   return utils.splitSignature(signature)
 }
 
-const createPublication = async (id, description) => {
+const createPublication = async (id: any, description: any) => {
 
-    const ipfsUrl = await sendMetadataToIpfs(description);
+    const ipfsUrl = await sendMetadataToIpfs();
 
     const response = await apolloClient.mutate({
       mutation: CREATE_POST_TYPED_DATA,
@@ -238,6 +238,8 @@ const createPublication = async (id, description) => {
   
     setValid(false);
     setIsLoading(false);
+    
+    //@ts-ignore
     setDoneInfo();
  
     onClose();

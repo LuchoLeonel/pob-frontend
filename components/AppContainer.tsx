@@ -1,11 +1,7 @@
 import { NextPage } from "next";
 import { Container, Link } from "@chakra-ui/react";
 import CardPost from "./CardPost/CardPost";
-import { useEffect, useState } from "react";
-import { BACKEND_URL } from "../utils/utils";
-import MySales from "./MySales";
-import { apolloClient, apolloClientNoSecure } from "../api/apollo";
-import { GET_PUBLICATION } from "../api/querys";
+import { useState } from "react";
 
 type Publications = {
   postLensID: string;
@@ -43,7 +39,7 @@ const AppContainer = ({ posts }: Props) => {
             publications.map((pub, i) => (
               <Link href={"/pub/" + pub._id} key={pub.postLensID + "_" + i}>
                 <CardPost
-                  key={pub.postLensID}
+                  key_={pub.postLensID}
                   profileId={pub.profileID}
                   user={pub.lensProfile}
                   image={pub.image}
