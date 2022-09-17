@@ -11,9 +11,9 @@ const AppContainer: NextPage = () => {
         display={"flex"}
         flexDirection={"column"}
         alignItems={"center"}
-        gap={"20px"}
       >
         <CardPost
+          user={"manolo.lens"}
           image="https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
           title="Mercedes Benz 2021"
           price={25.0}
@@ -21,6 +21,7 @@ const AppContainer: NextPage = () => {
           shares={12}
         />
         <CardPost
+          user={"manolo.lens"}
           image="https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
           title="Mercedes Benz 2021"
           price={25.0}
@@ -28,6 +29,7 @@ const AppContainer: NextPage = () => {
           shares={12}
         />{" "}
         <CardPost
+          user={"manolo.lens"}
           image="https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
           title="Mercedes Benz 2021"
           price={25.0}
@@ -35,6 +37,7 @@ const AppContainer: NextPage = () => {
           shares={12}
         />{" "}
         <CardPost
+          user={"manolo.lens"}
           image="https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
           title="Mercedes Benz 2021"
           price={25.0}
