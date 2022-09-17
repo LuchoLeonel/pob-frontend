@@ -1,11 +1,10 @@
 import { NextPage } from "next";
-import { Container } from "@chakra-ui/react";
+import { Container, Link } from "@chakra-ui/react";
 import CardPost from "./CardPost/CardPost";
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../utils/utils";
 import { apolloClient } from "../api/apollo";
 import { GET_PUBLICATION } from '../api/querys';
-import Link from "next/link";
 
 type Publications = {
   postLensID: string;
@@ -67,8 +66,6 @@ const AppContainer: NextPage = () => {
       },
    })
  }
-
- console.log(publications)
 
   return (
     <Container minW={"100%"} maxH={"85vh"} overflowY={"scroll"}>

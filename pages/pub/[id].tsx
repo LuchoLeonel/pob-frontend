@@ -172,6 +172,8 @@ const Publication: NextPage = (props: Props) => {
                   "https://static.wikia.nocookie.net/espokemon/images/7/77/Pikachu.png"
                 }
                 alt="image"
+                boxSize="400px"
+                objectFit="contain"
               />
 
               <Box>
