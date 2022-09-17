@@ -4,9 +4,9 @@ import CardPost from "./CardPost/CardPost";
 import GetPublications from "./GetPublications";
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../utils/utils";
-import MySales from './MySales';
+import MySales from "./MySales";
 import { apolloClient } from "../api/apollo";
-import { GET_PUBLICATION } from '../api/querys';
+import { GET_PUBLICATION } from "../api/querys";
 
 type Publications = {
   postLensID: string;
@@ -18,6 +18,7 @@ type Publications = {
   mirrors: number;
   _id: string;
   title: string;
+  description: string | undefined;
   __v: number;
 };
 
@@ -51,6 +52,7 @@ const AppContainer: NextPage = () => {
         data[d].description = publicationInfo?.description;
         data[d].lensProfile = publicationInfo?.profile?.handle;
       }
+      console.log(data);
       setPublications(data);
     } catch (error) {
       console.log(error);
@@ -58,16 +60,16 @@ const AppContainer: NextPage = () => {
     }
   };
 
-  const getPublication = (publicationId) => {
+  const getPublication = (publicationId: string) => {
     return apolloClient.query({
-     query: GET_PUBLICATION,
+      query: GET_PUBLICATION,
       variables: {
         request: {
-          publicationId
-        }
+          publicationId,
+        },
       },
-   })
- }
+    });
+  };
 
   return (
     <Container minW={"100%"} maxH={"85vh"} overflowY={"scroll"}>
