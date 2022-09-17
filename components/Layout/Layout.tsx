@@ -123,22 +123,22 @@ const Layout = ({ children }: Props) => {
                 <LogoIcon w={48}/>
               </Heading>
             </Link>
-            <Button onClick={newPostModalOnOpen} colorScheme="pink" isDisabled={!isConnected}>Publish</Button>
+            <Button onClick={newPostModalOnOpen} colorScheme="brand" isDisabled={!isConnected}>Publish</Button>
             <Box height={"50%"}>
               <Text as="b" fontSize={"xl"}>
                 Categories
               </Text>
               <Box>
-                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Computadoras</Button>
-                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Autos</Button>
-                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Hogar</Button>
-                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Cocina</Button>
-                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Insumos</Button>
-                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Computadoras</Button>
-                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Autos</Button>
-                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Hogar</Button>
-                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Cocina</Button>
-                  <Button size="xs" m="1" colorScheme="pink" variant="outline">Insumos</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Computadoras</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Autos</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Hogar</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Cocina</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Insumos</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Computadoras</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Autos</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Hogar</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Cocina</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Insumos</Button>
               </Box>
             </Box>
             {isConnected && <Link href={"/movements"}>
@@ -188,7 +188,7 @@ const Layout = ({ children }: Props) => {
                 <HStack m={4} spacing={4}>
                   <Spacer />
                   {connected && !connectedLens ? (
-                    <Button colorScheme="pink" onClick={connecToLens}>
+                    <Button colorScheme="brand" onClick={connecToLens}>
                       Connect to Lens
                     </Button>
                   ) : (
