@@ -1,7 +1,6 @@
 import { NextPage } from "next";
-import { Container } from "@chakra-ui/react";
+import { Container, Link } from "@chakra-ui/react";
 import CardPost from "./CardPost/CardPost";
-import GetPublications from "./GetPublications";
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../utils/utils";
 import MySales from "./MySales";
@@ -27,8 +26,6 @@ const AppContainer: NextPage = () => {
 
   useEffect(() => {
     getDatabasePosts();
-
-    console.log(publications);
   }, []);
 
   const getDatabasePosts = async () => {
@@ -37,6 +34,7 @@ const AppContainer: NextPage = () => {
       const response = await fetch(url);
       const response2 = await response.json();
       const data = response2.data;
+      console.log(data);
       for (const d in data) {
         const publication_id = data[d].postLensID;
         var parsedPublicationId;
@@ -47,9 +45,10 @@ const AppContainer: NextPage = () => {
         }
         const publicationId = data[d].profileID + "-" + parsedPublicationId;
         const response = await getPublication(publicationId);
+        //console.log(response);
         const publicationInfo = response.data.publication;
+        data[d].postLensID = publicationId;
         data[d].mirrors = publicationInfo?.mirrors?.length;
-        data[d].description = publicationInfo?.description;
         data[d].lensProfile = publicationInfo?.profile?.handle;
       }
       console.log(data);
@@ -83,9 +82,11 @@ const AppContainer: NextPage = () => {
       >
         <>
           {publications.length > 0 &&
-            publications.map((pub) => (
+            publications.map((pub, i) => (
+              <Link href={"/pub/"+pub._id} key={pub.postLensID + "_" + i}>
               <CardPost
                 key={pub.postLensID}
+                profileId={pub.profileID}
                 user={pub.lensProfile}
                 image={pub.image}
                 title={pub.title}
@@ -93,10 +94,10 @@ const AppContainer: NextPage = () => {
                 likes={18}
                 shares={pub.mirrors}
               />
+              </Link>
             ))}
         </>
       </Container>
-      <MySales />
     </Container>
   );
 };

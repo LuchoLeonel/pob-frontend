@@ -27,6 +27,7 @@ import { GET_CHALLENGE, AUTHENTICATION } from "../../api/querys";
 import { ethers } from "ethers";
 import { checkStorage, clearStorage } from "../../utils/utils";
 import NewPostModal from "../NewPost";
+import LogoIcon from "../Icons/Logo";
 
 type Props = {
   children: JSX.Element;
@@ -118,7 +119,9 @@ const Layout = ({ children }: Props) => {
             gap={"42px"}
           >
             <Link href={"/"}>
-              <Heading cursor={"pointer"}>Logo</Heading>
+              <Heading cursor={"pointer"}>
+                <LogoIcon width="200px" height="84px"/>
+              </Heading>
             </Link>
             <Button onClick={newPostModalOnOpen} colorScheme="pink" isDisabled={!isConnected}>Publish</Button>
             <Box height={"50%"}>
@@ -161,9 +164,9 @@ const Layout = ({ children }: Props) => {
               <Link href={"/"}>
                 <Heading
                   cursor={"pointer"}
-                  display={{ base: "block", md: "block", lg: "none" }}
+                  display={{ base: "flex", md: "flex", lg: "none" }}
                 >
-                  Logo
+                <LogoIcon width="200px" height="84px"/>
                 </Heading>
               </Link>
               <Flex

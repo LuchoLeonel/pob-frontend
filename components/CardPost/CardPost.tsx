@@ -10,8 +10,14 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import Matic from "../Icons/Matic";
+import { apolloClient } from "../../api/apollo";
+import { CREATE_MIRROR_TYPED_DATA } from "../../api/querys";
+import { useAccount } from 'wagmi'
+
 
 type Props = {
+  key: string,
+  profileId: string,
   user: string;
   image: string;
   title: string;
@@ -24,6 +30,8 @@ type Props = {
 };
 
 const CardPost = ({
+  key,
+  profileId,
   user,
   image,
   title,
@@ -34,6 +42,7 @@ const CardPost = ({
   newLiked,
   newShared,
 }: Props) => {
+  const { address, isConnected } = useAccount()
   const [liked, setLiked] = useState(false);
   const [shared, setShared] = useState(false);
 
@@ -48,8 +57,29 @@ const CardPost = ({
     if (newShared) {
       setShared(newShared);
     }
+    
   }, []);
 
+  const Mirror = async () => {
+    if (!shared && isConnected) {
+      console.log(key);
+        let response = await apolloClient.mutate({
+         mutation: CREATE_MIRROR_TYPED_DATA,
+         variables: {
+           request: {
+            profileId: profileId,
+            publicationId: key,
+            referenceModule: {
+                followerOnlyReferenceModule: true
+            }
+         },
+         },
+       })
+       console.log(response);
+    }
+    setShared(!shared)
+  }
+  
   return (
     <Box
       width={{ base: "4xs", md: "xl", lg: "2xl", xl: "3xl" }}
@@ -142,7 +172,7 @@ const CardPost = ({
             color={shared ? "pink" : witheBlack}
             _hover={{ color: "pink", borderColor: "pink" }}
             cursor={"pointer"}
-            onClick={() => setShared(!shared)}
+            onClick={() => Mirror()}
             transition={"ease-in-out 0.25s"}
           >
             <RepeatClockIcon w={4} h={4} marginBottom={"3px"} />

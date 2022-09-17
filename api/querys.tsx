@@ -186,37 +186,39 @@ export const CREATE_COMMENT_TYPED_DATA = gql`
 `;
 
 export const CREATE_MIRROR_TYPED_DATA = gql`
-  mutation ($request: CreateMirrorTypedDataRequest!) {
-    createMirrorTypedData(request: $request) {
-      id
-      expiresAt
-      typedData {
-        types {
-          MirrorWithSig {
-            name
-            type
-          }
-        }
-        domain {
+
+mutation($request: CreateMirrorRequest!) { 
+  createMirrorTypedData(request: $request) {
+    id
+    expiresAt
+    typedData {
+      types {
+        MirrorWithSig {
           name
-          chainId
-          version
-          verifyingContract
-        }
-        value {
-          nonce
-          deadline
-          profileId
-          profileIdPointed
-          pubIdPointed
-          referenceModule
-          referenceModuleData
-          referenceModuleInitData
+          type
         }
       }
+    domain {
+      name
+      chainId
+      version
+      verifyingContract
     }
-  }
-`;
+
+    value {
+      nonce
+      deadline
+      profileId
+      profileIdPointed
+      pubIdPointed
+              referenceModule
+      referenceModuleData
+      referenceModuleInitData
+    }
+   }
+ }
+}
+`
 
 export const GET_PUBLICATIONS = gql`
   query ($request: PublicationsQueryRequest!) {
