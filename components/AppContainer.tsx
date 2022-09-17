@@ -5,7 +5,16 @@ import GetPublications from "./GetPublications";
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../utils/utils";
 
-type Publications = any;
+type Publications = {
+  postLensID: string;
+  profileID: string;
+  section: string;
+  image: string;
+  price: number;
+  _id: string;
+  title: string;
+  __v: number;
+};
 
 const AppContainer: NextPage = () => {
   const [publications, setPublications] = useState(Array<Publications>);
@@ -21,6 +30,7 @@ const AppContainer: NextPage = () => {
     try {
       const response = await fetch(url);
       const data = await response.json();
+      console.log(data);
       setPublications(data.data);
     } catch (error) {
       console.log(error);
