@@ -4,6 +4,9 @@ import CardPost from "./CardPost/CardPost";
 import GetPublications from "./GetPublications";
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../utils/utils";
+import MySales from './MySales';
+import { apolloClient } from "../api/apollo";
+import { GET_PUBLICATION } from '../api/querys';
 
 type Publications = {
   postLensID: string;
@@ -11,6 +14,8 @@ type Publications = {
   section: string;
   image: string;
   price: number;
+  lensProfile: string;
+  mirrors: number;
   _id: string;
   title: string;
   __v: number;
@@ -29,14 +34,40 @@ const AppContainer: NextPage = () => {
     const url = BACKEND_URL + "/posts";
     try {
       const response = await fetch(url);
-      const data = await response.json();
-      console.log(data);
-      setPublications(data.data);
+      const response2 = await response.json();
+      const data = response2.data;
+      for (const d in data) {
+        const publication_id = data[d].postLensID;
+        var parsedPublicationId;
+        if (publication_id < 10) {
+          parsedPublicationId = "0x0" + publication_id;
+        } else {
+          parsedPublicationId = "0x" + publication_id;
+        }
+        const publicationId = data[d].profileID + "-" + parsedPublicationId;
+        const response = await getPublication(publicationId);
+        const publicationInfo = response.data.publication;
+        data[d].mirrors = publicationInfo?.mirrors?.length;
+        data[d].description = publicationInfo?.description;
+        data[d].lensProfile = publicationInfo?.profile?.handle;
+      }
+      setPublications(data);
     } catch (error) {
       console.log(error);
       alert("Something went wrong.");
     }
   };
+
+  const getPublication = (publicationId) => {
+    return apolloClient.query({
+     query: GET_PUBLICATION,
+      variables: {
+        request: {
+          publicationId
+        }
+      },
+   })
+ }
 
   return (
     <Container minW={"100%"} maxH={"85vh"} overflowY={"scroll"}>
@@ -45,22 +76,25 @@ const AppContainer: NextPage = () => {
         display={"flex"}
         flexDirection={"column"}
         alignItems={"center"}
+        gap={"24px"}
+        paddingY={"20px"}
       >
         <>
           {publications.length > 0 &&
             publications.map((pub) => (
               <CardPost
                 key={pub.postLensID}
-                user={"manolo.lens"}
+                user={pub.lensProfile}
                 image={pub.image}
                 title={pub.title}
                 price={pub.price}
                 likes={18}
-                shares={12}
+                shares={pub.mirrors}
               />
             ))}
         </>
       </Container>
+      <MySales />
     </Container>
   );
 };

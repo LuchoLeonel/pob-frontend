@@ -120,7 +120,7 @@ const Layout = ({ children }: Props) => {
             <Link href={"/"}>
               <Heading cursor={"pointer"}>Logo</Heading>
             </Link>
-            <Button onClick={newPostModalOnOpen} colorScheme="pink">Publish</Button>
+            <Button onClick={newPostModalOnOpen} colorScheme="pink" isDisabled={!isConnected}>Publish</Button>
             <Box height={"50%"}>
               <Text as="b" fontSize={"xl"}>
                 Categories
@@ -138,9 +138,9 @@ const Layout = ({ children }: Props) => {
                   <Button size="xs" m="1" colorScheme="pink" variant="outline">Insumos</Button>
               </Box>
             </Box>
-            <Link href={"/movements"}>
+            {isConnected && <Link href={"/movements"}>
               <Button>History</Button>
-            </Link>
+            </Link>}
           </Flex>
           <Flex
             flexDirection={"column"}
@@ -185,7 +185,7 @@ const Layout = ({ children }: Props) => {
                 <HStack m={4} spacing={4}>
                   <Spacer />
                   {connected && !connectedLens ? (
-                    <Button colorScheme="pink.500" onClick={connecToLens}>
+                    <Button colorScheme="pink" onClick={connecToLens}>
                       Connect to Lens
                     </Button>
                   ) : (

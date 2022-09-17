@@ -28,7 +28,7 @@ import {ethers, utils} from "ethers";
 //@ts-ignore
 import omitDeep from 'omit-deep';
 import { createLensHub } from '../utils/lens-hub';
-import {sendToIPFS} from '../api/ipfs';
+import {sendMetadataToIpfs} from '../api/ipfs';
 
 
 declare var window: any;
@@ -90,14 +90,13 @@ export const NewPostModal: FC<{
     const { fileUrl, fileId } = await upload.uploadFile({
       file: files[0]
     });
-    console.log(fileUrl, fileId);
     
 
     const user = await getProfile();
     if (!user) { return }
-    console.log(user);
-    await createPublication(user);
-    const publicationsLenght = await getPublicationsLenght(user);
+
+    await createPublication(user, description);
+    const publicationId = await getPublicationsLenght(user);
 
     const url = BACKEND_URL + "/post";
     const options = {
@@ -108,14 +107,14 @@ export const NewPostModal: FC<{
         price,
         image: fileUrl,
         profileID: user,
-        postLensID: publicationsLenght - 1,
+        postLensID: publicationId,
         section: "Automoviles",
+        description
       }),
     }
 
     const response = await fetch(url, options);
 
-    console.log(response);
 
     setIsLoading(false);
   };
@@ -133,7 +132,7 @@ export const NewPostModal: FC<{
       });
       let data = response.data.profiles.items;
       if (data.length == 0) { return };
-      return data[0].id;
+      return data[0]?.id;
   }
 
 
@@ -152,10 +151,10 @@ const splitSignature = (signature) => {
   return utils.splitSignature(signature)
 }
 
-const createPublication = async (id) => {
+const createPublication = async (id, description) => {
 
-    const ipfsUrl = await sendToIPFS();
-    console.log(ipfsUrl)
+    const ipfsUrl = await sendMetadataToIpfs(description);
+
     const response = await apolloClient.mutate({
       mutation: CREATE_POST_TYPED_DATA,
       variables: {
@@ -206,7 +205,9 @@ const createPublication = async (id) => {
           }
         },
       });
-    return response.data.publications.items.length;
+
+    const length = response.data.publications.items.length;
+    return length;
 }
 
   return (
