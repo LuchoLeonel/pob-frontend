@@ -6,6 +6,7 @@ import { APP_ID } from "../utils/utils";
 import {ethers, utils} from "ethers";
 import omitDeep from 'omit-deep';
 import { createLensHub } from '../utils/lens-hub';
+import { v4 as uuidv4 } from 'uuid';
 
 
 type Following = any;
@@ -22,16 +23,17 @@ const GetPublications = () => {
 
     useEffect(() => {
         const main = async () => {
-          //const profiles = await getFollowing();
-          //console.log(profiles);
-          //await getPublications(profiles);
+          const profiles = await getFollowing();
+          console.log(profiles);
+          await getPublications(profiles[0].profile.id);
           let use = await getProfile();
           console.log(use[0].id);
+          console.log("unique id" + uuidv4());/*
           if (!publicMade) {
             await createPublication(use[0].id);
             setPublicMade(true);
           }
-
+*/
 
           await getPublications(use[0].id);
         }
@@ -108,7 +110,7 @@ const createPublication = async (id) => {
       variables: {
         request: {
           profileId: id,
-          contentURI: "https://pastebin.com/raw/KT2M61VT",
+          contentURI: "https://pastebin.com/raw/R0EpyJM0",
           collectModule: {
             freeCollectModule: { followerOnly: false }
         },
@@ -139,7 +141,6 @@ const createPublication = async (id) => {
         deadline: typedData.value.deadline,
       },
     });
-    console.log(tx);
     console.log(tx.hash);
     return;
   }

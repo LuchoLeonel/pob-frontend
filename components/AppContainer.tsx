@@ -42,6 +42,7 @@ const AppContainer: NextPage = () => {
           shares={12}
         />
       </Container>
+      <GetPublications />
     </Container>
   );
 };
