@@ -30,7 +30,7 @@ const GetPublications = () => {
           let use = await getProfile();
           console.log(use[0].id);
           /*if (!publicMade) {
-            await createPublication(use[0].id);
+            
             setPublicMade(true);
           }*/
 
@@ -73,80 +73,8 @@ const GetPublications = () => {
       return;
   }
 
-  const getProfile = async () => {
-    const response = await apolloClient.query({
-        query: GET_PROFILES_OWNED_BY,
-        variables: {
-            request:{ 
-                ownedBy: address,
-                limit: 1,
-            }
-        },
-      });
-      let data = response.data.profiles.items;
-      setUser(data);
-      return data;
-}
 
 
- const signedTypeData = async (domain, types, value) => {
-  const ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = await ethersProvider.getSigner()
-  // remove the __typedname from the signature!
-  return signer._signTypedData(
-    omitDeep(domain, '__typename'),
-    omitDeep(types, '__typename'),
-    omitDeep(value, '__typename')
-  );
-}
-
-const splitSignature = (signature) => {
-  return utils.splitSignature(signature)
-}
-
-const createPublication = async (id) => {
-
-    const ipfsUrl = await sendToIPFS();
-    console.log(ipfsUrl)
-    const response = await apolloClient.mutate({
-      mutation: CREATE_POST_TYPED_DATA,
-      variables: {
-        request: {
-          profileId: id,
-          contentURI: ipfsUrl,
-          collectModule: {
-            freeCollectModule: { followerOnly: false }
-        },
-        referenceModule: {
-            followerOnlyReferenceModule: true
-        }
-        }
-      },
-    });
-    const typedData = response.data.createPostTypedData.typedData;
-    const signature = await signedTypeData(typedData.domain, typedData.types, typedData.value);
-    const { v, r, s } = splitSignature(signature);
-    const ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
-    
-    const lensHub = createLensHub(ethersProvider);
-    console.log(lensHub);
-    const tx = await lensHub.postWithSig({
-      profileId: typedData.value.profileId,
-      contentURI:typedData.value.contentURI,
-      collectModule: typedData.value.collectModule,
-      collectModuleInitData: typedData.value.collectModuleInitData,
-      referenceModule: typedData.value.referenceModule,
-      referenceModuleInitData: typedData.value.referenceModuleInitData,
-      sig: {
-        v,
-        r,
-        s,
-        deadline: typedData.value.deadline,
-      },
-    });
-    console.log(tx.hash);
-    return;
-  }
 
 
     return (

@@ -17,7 +17,7 @@ const MySales = () => {
             mutation: CREATE_PROFILE,
             variables: {
                 request:{ 
-                    handle: "lucholeonelll",
+                    handle: "luchol123556343",
                     profilePictureUri: null,
                     followNFTURI: null,
                     followModule: {
@@ -26,6 +26,8 @@ const MySales = () => {
                 }
             },
           });
+
+          return response;
 
     }
 
@@ -72,9 +74,9 @@ const MySales = () => {
 */
     useEffect(() => {
         const main = async () => {
-          let response = await getProfile();
-        console.log(response);
-            
+          let profile = await getProfile();
+          let response = await createProfile();
+     
         }
     
         main();
