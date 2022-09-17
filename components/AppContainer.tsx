@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../utils/utils";
 import { apolloClient } from "../api/apollo";
 import { GET_PUBLICATION } from '../api/querys';
+import Link from "next/link";
 
 type Publications = {
   postLensID: string;
@@ -67,6 +68,8 @@ const AppContainer: NextPage = () => {
    })
  }
 
+ console.log(publications)
+
   return (
     <Container minW={"100%"} maxH={"85vh"} overflowY={"scroll"}>
       <Container
@@ -80,15 +83,16 @@ const AppContainer: NextPage = () => {
         <>
           {publications.length > 0 &&
             publications.map((pub, i) => (
-              <CardPost
-                key={pub.postLensID + "_" + i}
-                user={pub.lensProfile}
-                image={pub.image}
-                title={pub.title}
-                price={pub.price}
-                likes={18}
-                shares={pub.mirrors}
-              />
+              <Link href={"/pub/"+pub._id} key={pub.postLensID + "_" + i}>
+                <CardPost
+                  user={pub.lensProfile}
+                  image={pub.image}
+                  title={pub.title}
+                  price={pub.price}
+                  likes={18}
+                  shares={pub.mirrors}
+                />
+              </Link>
             ))}
         </>
       </Container>
