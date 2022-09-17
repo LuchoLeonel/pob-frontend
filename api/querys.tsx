@@ -1,33 +1,35 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const GET_CHALLENGE = gql`
-  query($request: ChallengeRequest!) {
-    challenge(request: $request) { text }
+  query ($request: ChallengeRequest!) {
+    challenge(request: $request) {
+      text
+    }
   }
-`
+`;
 export const AUTHENTICATION = gql`
-  mutation($request: SignedAuthChallenge!) { 
+  mutation ($request: SignedAuthChallenge!) {
     authenticate(request: $request) {
       accessToken
       refreshToken
     }
- }
-`
+  }
+`;
 
 export const VERIFY = gql`
-  query($request: VerifyRequest!) {
-  verify(request: $request)
+  query ($request: VerifyRequest!) {
+    verify(request: $request)
   }
-`
+`;
 
 export const REFRESH_AUTHENTICATION = gql`
-  mutation($request: RefreshRequest!) { 
+  mutation ($request: RefreshRequest!) {
     refresh(request: $request) {
       accessToken
       refreshToken
     }
- }
-`
+  }
+`;
 
 export const GET_PROFILE_BY_ID = gql`
   query ($request: ProfileRequest!) {
@@ -112,43 +114,43 @@ export const GET_PROFILE_BY_ID = gql`
       }
     }
   }
-`
+`;
 
 export const CREATE_POST_TYPED_DATA = gql`
-mutation($request: CreatePublicPostRequest!) { 
-  createPostTypedData(request: $request) {
-    id
-    expiresAt
-    typedData {
-      types {
-        PostWithSig {
+  mutation ($request: CreatePublicPostRequest!) {
+    createPostTypedData(request: $request) {
+      id
+      expiresAt
+      typedData {
+        types {
+          PostWithSig {
+            name
+            type
+          }
+        }
+        domain {
           name
-          type
+          chainId
+          version
+          verifyingContract
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          contentURI
+          collectModule
+          collectModuleInitData
+          referenceModule
+          referenceModuleInitData
         }
       }
-    domain {
-      name
-      chainId
-      version
-      verifyingContract
     }
-    value {
-      nonce
-      deadline
-      profileId
-      contentURI
-      collectModule
-      collectModuleInitData
-      referenceModule
-      referenceModuleInitData
-    }
-   }
- }
-}
-`
+  }
+`;
 
 export const CREATE_COMMENT_TYPED_DATA = gql`
-  mutation($request: CreateCommentTypedDataRequest!)  {
+  mutation ($request: CreateCommentTypedDataRequest!) {
     createCommentTypedData(request: $request) {
       id
       expiresAt
@@ -181,9 +183,10 @@ export const CREATE_COMMENT_TYPED_DATA = gql`
       }
     }
   }
-`
+`;
 
 export const CREATE_MIRROR_TYPED_DATA = gql`
+
 mutation($request: CreateMirrorRequest!) { 
   createMirrorTypedData(request: $request) {
     id
@@ -201,6 +204,7 @@ mutation($request: CreateMirrorRequest!) {
       version
       verifyingContract
     }
+
     value {
       nonce
       deadline
@@ -217,10 +221,10 @@ mutation($request: CreateMirrorRequest!) {
 `
 
 export const GET_PUBLICATIONS = gql`
-  query($request: PublicationsQueryRequest!)  {
+  query ($request: PublicationsQueryRequest!) {
     publications(request: $request) {
       items {
-        __typename 
+        __typename
         ... on Post {
           ...PostFields
         }
@@ -314,15 +318,15 @@ export const GET_PUBLICATIONS = gql`
         recipient
       }
       ... on ProfileFollowModuleSettings {
-      type
+        type
       }
       ... on RevertFollowModuleSettings {
-      type
+        type
       }
     }
   }
 
-  fragment PublicationStatsFields on PublicationStats { 
+  fragment PublicationStatsFields on PublicationStats {
     totalAmountOfMirrors
     totalAmountOfCollects
     totalAmountOfComments
@@ -354,9 +358,9 @@ export const GET_PUBLICATIONS = gql`
   fragment CollectModuleFields on CollectModule {
     __typename
     ... on FreeCollectModuleSettings {
-        type
-        followerOnly
-        contractAddress
+      type
+      followerOnly
+      contractAddress
     }
     ... on FeeCollectModuleSettings {
       type
@@ -467,12 +471,12 @@ export const GET_PUBLICATIONS = gql`
   fragment MirrorFields on Mirror {
     ...MirrorBaseFields
     mirrorOf {
-    ... on Post {
-        ...PostFields          
-    }
-    ... on Comment {
-        ...CommentFields          
-    }
+      ... on Post {
+        ...PostFields
+      }
+      ... on Comment {
+        ...CommentFields
+      }
     }
   }
 
@@ -513,10 +517,10 @@ export const GET_PUBLICATIONS = gql`
         ...MirrorBaseFields
         mirrorOf {
           ... on Post {
-            ...PostFields          
+            ...PostFields
           }
           ... on Comment {
-            ...CommentMirrorOfFields        
+            ...CommentMirrorOfFields
           }
         }
       }
@@ -534,21 +538,21 @@ export const GET_PUBLICATIONS = gql`
       }
     }
   }
-`
+`;
 
 export const GET_FOLLOWING = gql`
-  query($request: FollowingRequest!) {
-    following(request: $request) { 
+  query ($request: FollowingRequest!) {
+    following(request: $request) {
       items {
         profile {
           id
           name
           bio
           attributes {
-              displayType
-              traitType
-              key
-              value
+            displayType
+            traitType
+            key
+            value
           }
           followNftAddress
           metadata
@@ -639,10 +643,10 @@ export const GET_FOLLOWING = gql`
               recipient
             }
             ... on ProfileFollowModuleSettings {
-            type
+              type
             }
             ... on RevertFollowModuleSettings {
-            type
+              type
             }
           }
         }
@@ -655,11 +659,10 @@ export const GET_FOLLOWING = gql`
       }
     }
   }
-`
-
+`;
 
 export const GET_DEFAULT_PROFILE = gql`
-  query($request: DefaultProfileRequest!) {
+  query ($request: DefaultProfileRequest!) {
     defaultProfile(request: $request) {
       id
       name
@@ -733,10 +736,10 @@ export const GET_DEFAULT_PROFILE = gql`
           recipient
         }
         ... on ProfileFollowModuleSettings {
-         type
+          type
         }
         ... on RevertFollowModuleSettings {
-         type
+          type
         }
       }
     }
@@ -744,153 +747,152 @@ export const GET_DEFAULT_PROFILE = gql`
 `;
 
 export const CREATE_PROFILE = gql`
-mutation($request: CreateProfileRequest!) { 
-  createProfile(request: $request) {
-    ... on RelayerResult {
-      txHash
+  mutation ($request: CreateProfileRequest!) {
+    createProfile(request: $request) {
+      ... on RelayerResult {
+        txHash
+      }
+      ... on RelayError {
+        reason
+      }
+      __typename
     }
-    ... on RelayError {
-      reason
-    }
-          __typename
   }
-}
-`
-
+`;
 
 export const GET_PROFILES_OWNED_BY = gql`
-query($request: ProfileQueryRequest!) {
-  profiles(request: $request) {
-    items {
-      id
-      name
-      bio
-      attributes {
-        displayType
-        traitType
-        key
-        value
-      }
-              followNftAddress
-      metadata
-      isDefault
-      picture {
-        ... on NftImage {
-          contractAddress
-          tokenId
-          uri
-          verified
+  query ($request: ProfileQueryRequest!) {
+    profiles(request: $request) {
+      items {
+        id
+        name
+        bio
+        attributes {
+          displayType
+          traitType
+          key
+          value
         }
-        ... on MediaSet {
-          original {
-            url
-            mimeType
+        followNftAddress
+        metadata
+        isDefault
+        picture {
+          ... on NftImage {
+            contractAddress
+            tokenId
+            uri
+            verified
           }
-        }
-        __typename
-      }
-      handle
-      coverPicture {
-        ... on NftImage {
-          contractAddress
-          tokenId
-          uri
-          verified
-        }
-        ... on MediaSet {
-          original {
-            url
-            mimeType
-          }
-        }
-        __typename
-      }
-      ownedBy
-      dispatcher {
-        address
-        canUseRelay
-      }
-      stats {
-        totalFollowers
-        totalFollowing
-        totalPosts
-        totalComments
-        totalMirrors
-        totalPublications
-        totalCollects
-      }
-      followModule {
-        ... on FeeFollowModuleSettings {
-          type
-          amount {
-            asset {
-              symbol
-              name
-              decimals
-              address
+          ... on MediaSet {
+            original {
+              url
+              mimeType
             }
-            value
           }
-          recipient
+          __typename
         }
-        ... on ProfileFollowModuleSettings {
-         type
+        handle
+        coverPicture {
+          ... on NftImage {
+            contractAddress
+            tokenId
+            uri
+            verified
+          }
+          ... on MediaSet {
+            original {
+              url
+              mimeType
+            }
+          }
+          __typename
         }
-        ... on RevertFollowModuleSettings {
-         type
+        ownedBy
+        dispatcher {
+          address
+          canUseRelay
+        }
+        stats {
+          totalFollowers
+          totalFollowing
+          totalPosts
+          totalComments
+          totalMirrors
+          totalPublications
+          totalCollects
+        }
+        followModule {
+          ... on FeeFollowModuleSettings {
+            type
+            amount {
+              asset {
+                symbol
+                name
+                decimals
+                address
+              }
+              value
+            }
+            recipient
+          }
+          ... on ProfileFollowModuleSettings {
+            type
+          }
+          ... on RevertFollowModuleSettings {
+            type
+          }
         }
       }
-    }
-    pageInfo {
-      prev
-      next
-      totalCount
+      pageInfo {
+        prev
+        next
+        totalCount
+      }
     }
   }
-}
-`
+`;
 
 export const CREATE_SET_DEFAULT_PROFILE_TYPED_DATA = gql`
-mutation($request: CreateSetDefaultProfileRequest!) { 
-  createSetDefaultProfileTypedData(request: $request) {
-    id
-    expiresAt
-    typedData {
-      types {
-        SetDefaultProfileWithSig {
-          name
-          type
+  mutation ($request: CreateSetDefaultProfileRequest!) {
+    createSetDefaultProfileTypedData(request: $request) {
+      id
+      expiresAt
+      typedData {
+        types {
+          SetDefaultProfileWithSig {
+            name
+            type
+          }
         }
-      }
-      domain {
-        name
-        chainId
-        version
-        verifyingContract
-      }
-      value {
-        nonce
-        deadline
-        wallet
-        profileId
+        domain {
+          name
+          chainId
+          version
+          verifyingContract
+        }
+        value {
+          nonce
+          deadline
+          wallet
+          profileId
+        }
       }
     }
   }
-}
-`
+`;
 
 export const GET_PUBLICATION = gql`
-  query($request: PublicationQueryRequest!) {
+  query ($request: PublicationQueryRequest!) {
     publication(request: $request) {
-        __typename 
-        ... on Post {
-          ...PostFields
-        }
-        ... on Comment {
-          ...CommentFields
-        }
-        ... on Mirror {
-          ...MirrorFields
+      __typename
+      ... on Post {
+        ...PostFields
+      }
+      ... on Comment {
+        ...CommentFields
+      }
+      ... on Mirror {
+        ...MirrorFields
       }
     }
   }
@@ -910,7 +912,7 @@ export const GET_PUBLICATION = gql`
       key
       value
     }
-        isFollowedByMe
+    isFollowedByMe
     isFollowing(who: null)
     followNftAddress
     metadata
@@ -970,15 +972,15 @@ export const GET_PUBLICATION = gql`
         recipient
       }
       ... on ProfileFollowModuleSettings {
-       type
+        type
       }
       ... on RevertFollowModuleSettings {
-       type
+        type
       }
     }
   }
 
-  fragment PublicationStatsFields on PublicationStats { 
+  fragment PublicationStatsFields on PublicationStats {
     totalAmountOfMirrors
     totalAmountOfCollects
     totalAmountOfComments
@@ -1010,9 +1012,9 @@ export const GET_PUBLICATION = gql`
   fragment CollectModuleFields on CollectModule {
     __typename
     ... on FreeCollectModuleSettings {
-        type
-        followerOnly
-        contractAddress
+      type
+      followerOnly
+      contractAddress
     }
     ... on FeeCollectModuleSettings {
       type
@@ -1088,9 +1090,9 @@ export const GET_PUBLICATION = gql`
       }
     }
     appId
-        hidden
-        reaction(request: null)
-        mirrors(by: null)
+    hidden
+    reaction(request: null)
+    mirrors(by: null)
     hasCollectedByMe
   }
 
@@ -1115,20 +1117,20 @@ export const GET_PUBLICATION = gql`
       }
     }
     appId
-        hidden
-        reaction(request: null)
+    hidden
+    reaction(request: null)
     hasCollectedByMe
   }
 
   fragment MirrorFields on Mirror {
     ...MirrorBaseFields
     mirrorOf {
-     ... on Post {
-        ...PostFields          
-     }
-     ... on Comment {
-        ...CommentFields          
-     }
+      ... on Post {
+        ...PostFields
+      }
+      ... on Comment {
+        ...CommentFields
+      }
     }
   }
 
@@ -1153,9 +1155,9 @@ export const GET_PUBLICATION = gql`
       }
     }
     appId
-        hidden
-        reaction(request: null)
-        mirrors(by: null)
+    hidden
+    reaction(request: null)
+    mirrors(by: null)
     hasCollectedByMe
   }
 
@@ -1169,10 +1171,10 @@ export const GET_PUBLICATION = gql`
         ...MirrorBaseFields
         mirrorOf {
           ... on Post {
-             ...PostFields          
+            ...PostFields
           }
           ... on Comment {
-             ...CommentMirrorOfFields        
+            ...CommentMirrorOfFields
           }
         }
       }
@@ -1186,8 +1188,8 @@ export const GET_PUBLICATION = gql`
         ...PostFields
       }
       ... on Mirror {
-         ...MirrorBaseFields
+        ...MirrorBaseFields
       }
     }
   }
-`
+`;
