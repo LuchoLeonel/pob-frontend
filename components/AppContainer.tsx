@@ -1,10 +1,8 @@
 import { NextPage } from "next";
 import { Container } from "@chakra-ui/react";
 import CardPost from "./CardPost/CardPost";
-import GetPublications from "./GetPublications";
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../utils/utils";
-import MySales from './MySales';
 import { apolloClient } from "../api/apollo";
 import { GET_PUBLICATION } from '../api/querys';
 
@@ -79,9 +77,9 @@ const AppContainer: NextPage = () => {
       >
         <>
           {publications.length > 0 &&
-            publications.map((pub) => (
+            publications.map((pub, i) => (
               <CardPost
-                key={pub.postLensID}
+                key={pub.postLensID + "_" + i}
                 user={pub.lensProfile}
                 image={pub.image}
                 title={pub.title}
@@ -92,7 +90,6 @@ const AppContainer: NextPage = () => {
             ))}
         </>
       </Container>
-      <MySales />
     </Container>
   );
 };
