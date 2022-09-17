@@ -243,7 +243,7 @@ const Publication = ({ post }: Props) => {
                 </HStack>
               </Box>
             </HStack>
-            <Box>
+            <Box w="full">
               <Text>
                 {post.description !== undefined ? post.description : null}
               </Text>
