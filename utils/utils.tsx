@@ -66,3 +66,4 @@ export const refreshAccessToken = async () => {
 };
 
 export const BACKEND_URL = "https://f15d-190-210-147-120.ngrok.io";
+export const CONTRACT_ADDRESS = "0x3F176e748068C96284f4626a27a19Ad1843C11Ca";

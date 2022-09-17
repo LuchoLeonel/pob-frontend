@@ -14,21 +14,23 @@ import {
   Text,
   HStack,
   useNumberInput,
+  Link,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { FC } from "react";
 import { Upload } from "upload-js";
 import FileUpload from "./FileUpload";
 import ImageViewer from "./ImageViewer";
-import {BACKEND_URL, checkStorage} from '../utils/utils'; 
+import {BACKEND_URL, checkStorage, CONTRACT_ADDRESS} from '../utils/utils'; 
 import { GET_PROFILES_OWNED_BY, CREATE_POST_TYPED_DATA, GET_PUBLICATIONS } from "../api/querys";
 import { apolloClient } from "../api/apollo";
-import { useAccount } from 'wagmi'
+import { useAccount, useSigner } from 'wagmi'
 import {ethers, utils} from "ethers";
 //@ts-ignore
 import omitDeep from 'omit-deep';
 import { createLensHub } from '../utils/lens-hub';
 import {sendMetadataToIpfs} from '../api/ipfs';
+import abi from "./../utils/abi.json"
 
 
 declare var window: any;
@@ -75,6 +77,7 @@ export const NewPostModal: FC<{
 
   const [valid, setValid] = useState(false);
   const [loading, setIsLoading] = useState(false);
+  const [doneInfo, setDoneInfo] = useState<any>();
 
   useEffect(() => {
     setValid(title !== "" && description !== "" && files.length > 0);
@@ -112,8 +115,21 @@ export const NewPostModal: FC<{
       }),
     }
 
-    const response = await fetch(url, options);
+    const responseBackend = await fetch(url, options);
 
+    const jsonbackend = await responseBackend.json();
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const pobcontract = new ethers.Contract(CONTRACT_ADDRESS,abi,signer);
+
+    const txn = await pobcontract.sell(user, publicationId, ethers.utils.parseUnits(price.toString()));
+
+    const txnInfo = await txn.wait();
+
+    console.log(jsonbackend.data[0]._id, txnInfo, txn);
+
+    setDoneInfo({"hash": txnInfo.transactionHash, "id": jsonbackend.data[0]._id});
 
     setIsLoading(false);
   };
@@ -135,7 +151,7 @@ export const NewPostModal: FC<{
   }
 
 
- const signedTypeData = async (domain, types, value) => {
+ const signedTypeData = async (domain: any, types: any, value: any) => {
   const ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = await ethersProvider.getSigner()
   // remove the __typedname from the signature!
@@ -146,13 +162,13 @@ export const NewPostModal: FC<{
   );
 }
 
-const splitSignature = (signature) => {
+const splitSignature = (signature: any) => {
   return utils.splitSignature(signature)
 }
 
-const createPublication = async (id, description) => {
+const createPublication = async (id: any, description: any) => {
 
-    const ipfsUrl = await sendMetadataToIpfs(description);
+    const ipfsUrl = await sendMetadataToIpfs();
 
     const response = await apolloClient.mutate({
       mutation: CREATE_POST_TYPED_DATA,
@@ -214,10 +230,25 @@ const createPublication = async (id, description) => {
     return length;
 }*/
 
+  function cleanClose() {
+    setTitle("");
+    setDescription("");
+    setPrice(0.01);
+    setFiles([]);
+  
+    setValid(false);
+    setIsLoading(false);
+    
+    //@ts-ignore
+    setDoneInfo();
+ 
+    onClose();
+  }
+
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={cleanClose}
       closeOnOverlayClick={!loading}
       closeOnEsc={!loading}
     >
@@ -264,11 +295,13 @@ const createPublication = async (id, description) => {
             )}
           </FormControl>
 
-          {loading && <Text>Please confirm the transaction...</Text>}
+          {loading && <Text p="5" color="pink.500" fontWeight="bold">Please confirm the transaction...</Text>}
+          {!loading && typeof doneInfo !== "undefined" && <Text p="5" color="pink.500" fontWeight="bold">Check <Link href={`https://mumbai.polygonscan.com/tx/${doneInfo.hash}`}>{doneInfo.hash}</Link></Text>}
+          {!loading && typeof doneInfo !== "undefined" && <Text p="5" color="pink.500" fontWeight="bold"><Link href={`/pub/${doneInfo.id}`}>Ver producto</Link></Text>}
         </ModalBody>
 
         <ModalFooter>
-          <Button
+          {typeof doneInfo === "undefined" && <Button
             onClick={create}
             isDisabled={!valid}
             isLoading={loading}
@@ -276,7 +309,7 @@ const createPublication = async (id, description) => {
             colorScheme="pink"
           >
             Create
-          </Button>
+          </Button>}
         </ModalFooter>
       </ModalContent>
     </Modal>

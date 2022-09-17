@@ -16,7 +16,7 @@ import { useAccount } from 'wagmi'
 
 
 type Props = {
-  key: string,
+  key_: string,
   profileId: string,
   user: string;
   image: string;
@@ -30,7 +30,7 @@ type Props = {
 };
 
 const CardPost = ({
-  key,
+  key_,
   profileId,
   user,
   image,
@@ -62,13 +62,13 @@ const CardPost = ({
 
   const Mirror = async () => {
     if (!shared && isConnected) {
-      console.log(key);
+      console.log(key_);
         let response = await apolloClient.mutate({
          mutation: CREATE_MIRROR_TYPED_DATA,
          variables: {
            request: {
             profileId: profileId,
-            publicationId: key,
+            publicationId: key_,
             referenceModule: {
                 followerOnlyReferenceModule: true
             }
@@ -103,7 +103,7 @@ const CardPost = ({
         <Image
           boxSize={{ base: "10" }}
           borderRadius={"100%"}
-          objectFit={"cover"}
+          objectFit={"contain"}
           alt="example"
           src={image}
         />

@@ -34,23 +34,30 @@ import {ethers} from 'ethers';
 import abi from '../../utils/abi.json';
 import {getSigner} from '../../utils/ethers-service'
 import { useAccount } from 'wagmi'
-import { GET_PROFILES_OWNED_BY } from "../../api/querys";
-import { apolloClient } from "../../api/apollo";
+import { GET_PROFILES_OWNED_BY, GET_PUBLICATION } from "../../api/querys";
+import { apolloClient, apolloClientNoSecure } from "../../api/apollo";
 
-
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
+import { client } from "@wagmi/core/dist/declarations/src/client";
+import { gql } from "@apollo/client";
 declare var window: any;
 
-type Props = {};
+type Props = {
+  post: Publications;
+};
 
-type PublicationData = {
-    id: string;
-    profileId: string;
-    postLensID: string;
-    section: string;
-    title: string;
-    price: string;
-    image: string;
-    description: string;
+type Publications = {
+  postLensID: string;
+  profileID: string;
+  section: string;
+  image: string;
+  price: number;
+  lensProfile: string;
+  mirrors: number;
+  _id: string;
+  title: string;
+  description: string | null;
+  __v: number;
 };
 
 export const ConfirmModal: FC<{
@@ -144,11 +151,12 @@ export const ConfirmModal: FC<{
   );
 };
 
-const Publication: NextPage = (props: Props) => {
+const Publication = ({ post }: Props) => {
   const router = useRouter();
   const { id } = router.query;
+  console.log(post);
 
-  const [data, setData] = useState<PublicationData>();
+  //const [data, setData] = useState<PublicationData>();
   const [loading, setIsLoading] = useState(false);
 
   const {
@@ -157,23 +165,7 @@ const Publication: NextPage = (props: Props) => {
     onClose: confirmOnClose,
   } = useDisclosure();
 
-  useEffect(() => {
-    if (!router.isReady) return;
-
-    (async () => {
-      try {
-        const response = await fetch(`${BACKEND_URL}/post/${id}`);
-        const result = await response.json();
-        setData(result.data[0]);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, [router.isReady]);
-
-  if (!data)
+  if (!post)
     return (
       <Flex w="full" h="full">
         <Spinner
@@ -202,13 +194,13 @@ const Publication: NextPage = (props: Props) => {
 
   return (
     <>
-      {data && (
+      {post && (
         <ConfirmModal
           isOpen={confirmIsOpen}
           onClose={confirmOnClose}
-          title={data.title}
-          price={data.price}
-          postLensId={data.postLensID}
+          title={post.title}
+          price={post.price?.toString()}
+          postLensId={post.postLensID}
         />
       )}
       <Container minW={"100%"} maxH={"85vh"} overflowY={"scroll"}>
@@ -223,7 +215,7 @@ const Publication: NextPage = (props: Props) => {
             <HStack>
               <Image
                 src={
-                  data.image ||
+                  post.image ||
                   "https://static.wikia.nocookie.net/espokemon/images/7/77/Pikachu.png"
                 }
                 alt="image"
@@ -233,10 +225,10 @@ const Publication: NextPage = (props: Props) => {
 
               <Box>
                 <Text fontSize="xl" textTransform="uppercase">
-                  {data.title}
+                  {post.title}
                 </Text>
-                <Text>{data.price}</Text>
-                <Text>{data.postLensId} @ proof of humanity</Text>
+                <Text>{post.price}</Text>
+                <Text>{post.postLensID} @ proof of humanity</Text>
 
                 <HStack mt="5">
                   <Button onClick={confirmOnOpen}>BUY</Button>
@@ -251,7 +243,9 @@ const Publication: NextPage = (props: Props) => {
               </Box>
             </HStack>
             <Box>
-              <Text>{data.description}</Text>
+              <Text>
+                {post.description !== undefined ? post.description : null}
+              </Text>
 
               <HStack>
                 <Spacer />
@@ -270,5 +264,136 @@ const Publication: NextPage = (props: Props) => {
     </>
   );
 };
+
+export async function getStaticPaths() {
+  const url = BACKEND_URL + "/posts";
+  const response = await fetch(url);
+  const data = await response.json();
+
+  const paths = data.data.map(
+    (post: {
+      profileID: string;
+      postLensID: number;
+      section: string;
+      title: string;
+      price: number;
+      image: string;
+      _id: string;
+      __v: number;
+    }) => {
+      return { params: { id: post._id } };
+    }
+  );
+  return {
+    paths,
+    fallback: true,
+  };
+}
+
+// `getStaticPaths` requires using `getStaticProps`
+export async function getStaticProps({ params }: { params: any }) {
+  const url = BACKEND_URL + `/post/${params.id}`;
+
+  const getPublication = async (publicationId: string) => {
+    return await apolloClientNoSecure.query({
+      query: GET_PUBLICATION,
+      variables: {
+        request: {
+          publicationId,
+        },
+      },
+    });
+  };
+
+  const response = await fetch(url);
+  const response2 = await response.json();
+  const data = response2.data[0];
+  if(data) {
+    const publication_id = data?.postLensID;
+    var parsedPublicationId;
+    if (publication_id < 10) {
+      parsedPublicationId = "0x0" + publication_id;
+    } else {
+      parsedPublicationId = "0x" + publication_id;
+    }
+    const publicationId = data.profileID + "-" + parsedPublicationId;
+    const responseGraphQL = await getPublication(publicationId);
+    const publicationInfo = responseGraphQL.data.publication;
+    data.mirrors = publicationInfo?.mirrors?.length === undefined ? 0 : publicationInfo?.mirrors?.length;
+    data.description =
+      publicationInfo?.description !== undefined
+        ? publicationInfo?.description
+        : null;
+    data.lensProfile = publicationInfo?.profile?.handle || null;
+    return {
+      props: { post: data },
+    };
+  }
+  return {
+    props: { post: [] },
+  };
+  
+}
+
+/**
+export async function getServerSideProps(ctx: any) {
+  const url = BACKEND_URL + `/posts`;
+  console.log(url);
+
+  const response = await fetch(url);
+  const fetchData = await response.json();
+  console.log(ctx.params.id);
+
+  const data = fetchData.data.filter(
+    (backPost: {
+      profileID: string;
+      postLensID: number;
+      section: string;
+      title: string;
+      price: number;
+      image: string;
+      _id: string;
+      __v: number;
+    }) => {
+      return backPost._id === ctx.params.id;
+    }
+  )[0];
+
+  const getPublication = async (publicationId: string) => {
+    return await apolloClient.query({
+      query: gql(GET_PUBLICATION),
+      variables: {
+        request: {
+          publicationId,
+        },
+      },
+    });
+  };
+
+  const publication_id = data.postLensID;
+  var parsedPublicationId;
+  if (publication_id < 10) {
+    parsedPublicationId = "0x0" + publication_id;
+  } else {
+    parsedPublicationId = "0x" + publication_id;
+  }
+  const publicationId = data.profileID + "-" + parsedPublicationId;
+  const responseGraphQL = await getPublication(publicationId);
+  console.log(responseGraphQL);
+  /**
+  console.log(responseGraphQL);
+  const publicationInfo = responseGraphQL.data.publication;
+  data.mirrors = publicationInfo?.mirrors?.length;
+  data.description = publicationInfo?.description;
+  data.lensProfile = publicationInfo?.profile?.handle;
+ 
+  console.log(data);
+  return {
+    props: {
+      post: "page" || null,
+    },
+  };
+}
+*/
 
 export default Publication;
