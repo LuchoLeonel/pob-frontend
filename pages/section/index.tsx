@@ -23,25 +23,25 @@ const Section: NextPage = (props: Props) => {
           marginTop={"12px"}
         >
           <ListItem>
-            <Link href={""}>Section 1</Link>
+            <Link href={""}>Computers</Link>
           </ListItem>
           <ListItem>
-            <Link href={""}>Section 2</Link>
+            <Link href={""}>Cars</Link>
           </ListItem>
           <ListItem>
-            <Link href={""}>Section 3</Link>
+            <Link href={""}>Home</Link>
           </ListItem>
           <ListItem>
-            <Link href={""}>Section 4</Link>
+            <Link href={""}>Kitchen</Link>
           </ListItem>
           <ListItem>
-            <Link href={""}>Section 5</Link>
+            <Link href={""}>Supplies</Link>
           </ListItem>
           <ListItem>
-            <Link href={""}>Section 6</Link>
+            <Link href={""}>Appliances</Link>
           </ListItem>
           <ListItem>
-            <Link href={""}>Section 7</Link>
+            <Link href={""}>Phones</Link>
           </ListItem>
         </List>
         <Link href={"/movements"}>

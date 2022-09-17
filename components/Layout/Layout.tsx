@@ -129,16 +129,16 @@ const Layout = ({ children }: Props) => {
                 Categories
               </Text>
               <Box>
-                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Computadoras</Button>
-                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Autos</Button>
-                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Hogar</Button>
-                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Cocina</Button>
-                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Insumos</Button>
-                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Computadoras</Button>
-                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Autos</Button>
-                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Hogar</Button>
-                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Cocina</Button>
-                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Insumos</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Computers</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Cars</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Home</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Kitchen</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Supplies</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Computers</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Cars</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Home</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Kitchen</Button>
+                  <Button size="xs" m="1" colorScheme="brand" variant="outline">Supplies</Button>
               </Box>
             </Box>
             {isConnected && <Link href={"/movements"}>
