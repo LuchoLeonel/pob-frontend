@@ -168,7 +168,7 @@ const splitSignature = (signature: any) => {
 
 const createPublication = async (id: any, description: any) => {
 
-    const ipfsUrl = await sendMetadataToIpfs();
+    const ipfsUrl = await sendMetadataToIpfs(description);
 
     const response = await apolloClient.mutate({
       mutation: CREATE_POST_TYPED_DATA,
