@@ -228,8 +228,8 @@ const Publication = ({ post }: Props) => {
                 <Text fontSize="xl" textTransform="uppercase">
                   {post.title}
                 </Text>
-                <Text>{post.price}</Text>
-                <Text>{post.postLensID} @ proof of humanity</Text>
+                <Text>MATIC {post.price}</Text>
+                <Text>{post.postLensID}</Text>
 
                 <HStack mt="5">
                   <Button onClick={confirmOnOpen} colorScheme="brand">BUY</Button>
