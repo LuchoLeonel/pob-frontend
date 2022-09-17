@@ -4,7 +4,7 @@ import CardPost from "./CardPost/CardPost";
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../utils/utils";
 import MySales from "./MySales";
-import { apolloClient } from "../api/apollo";
+import { apolloClient, apolloClientNoSecure } from "../api/apollo";
 import { GET_PUBLICATION } from "../api/querys";
 
 type Publications = {
@@ -21,54 +21,12 @@ type Publications = {
   __v: number;
 };
 
-const AppContainer: NextPage = () => {
-  const [publications, setPublications] = useState(Array<Publications>);
+type Props = {
+  posts: Publications[];
+};
 
-  useEffect(() => {
-    getDatabasePosts();
-  }, []);
-
-  const getDatabasePosts = async () => {
-    const url = BACKEND_URL + "/posts";
-    try {
-      const response = await fetch(url);
-      const response2 = await response.json();
-      const data = response2.data;
-      console.log(data);
-      for (const d in data) {
-        const publication_id = data[d].postLensID;
-        var parsedPublicationId;
-        if (publication_id < 10) {
-          parsedPublicationId = "0x0" + publication_id;
-        } else {
-          parsedPublicationId = "0x" + publication_id;
-        }
-        const publicationId = data[d].profileID + "-" + parsedPublicationId;
-        const response = await getPublication(publicationId);
-        //console.log(response);
-        const publicationInfo = response.data.publication;
-        data[d].postLensID = publicationId;
-        data[d].mirrors = publicationInfo?.mirrors?.length;
-        data[d].lensProfile = publicationInfo?.profile?.handle;
-      }
-      console.log(data);
-      setPublications(data);
-    } catch (error) {
-      console.log(error);
-      alert("Something went wrong.");
-    }
-  };
-
-  const getPublication = (publicationId: string) => {
-    return apolloClient.query({
-      query: GET_PUBLICATION,
-      variables: {
-        request: {
-          publicationId,
-        },
-      },
-    });
-  };
+const AppContainer = ({ posts }: Props) => {
+  const [publications, setPublications] = useState(posts);
 
   return (
     <Container minW={"100%"} maxH={"85vh"} overflowY={"scroll"}>
@@ -83,17 +41,17 @@ const AppContainer: NextPage = () => {
         <>
           {publications.length > 0 &&
             publications.map((pub, i) => (
-              <Link href={"/pub/"+pub._id} key={pub.postLensID + "_" + i}>
-              <CardPost
-                key={pub.postLensID}
-                profileId={pub.profileID}
-                user={pub.lensProfile}
-                image={pub.image}
-                title={pub.title}
-                price={pub.price}
-                likes={18}
-                shares={pub.mirrors}
-              />
+              <Link href={"/pub/" + pub._id} key={pub.postLensID + "_" + i}>
+                <CardPost
+                  key={pub.postLensID}
+                  profileId={pub.profileID}
+                  user={pub.lensProfile}
+                  image={pub.image}
+                  title={pub.title}
+                  price={pub.price}
+                  likes={18}
+                  shares={pub.mirrors}
+                />
               </Link>
             ))}
         </>
