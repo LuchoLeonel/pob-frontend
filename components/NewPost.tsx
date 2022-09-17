@@ -95,8 +95,7 @@ export const NewPostModal: FC<{
     const user = await getProfile();
     if (!user) { return }
 
-    await createPublication(user, description);
-    const publicationId = await getPublicationsLenght(user);
+    const publicationId = await createPublication(user, description);
 
     const url = BACKEND_URL + "/post";
     const options = {
@@ -169,6 +168,8 @@ const createPublication = async (id, description) => {
         }
       },
     });
+
+    console.log(response)
     const typedData = response.data.createPostTypedData.typedData;
     const signature = await signedTypeData(typedData.domain, typedData.types, typedData.value);
     const { v, r, s } = splitSignature(signature);
@@ -189,10 +190,13 @@ const createPublication = async (id, description) => {
         deadline: typedData.value.deadline,
       },
     });
-    console.log(tx.hash);
-    return;
-  }
 
+    const rc = await tx.wait(); // 0ms, as tx is already confirmed
+  
+    const otro = await lensHub.getPubCount(id);
+    return parseInt(otro._hex);
+  }
+/*
   const getPublicationsLenght = async (id) => {
       const response = await apolloClient.query({
         query: GET_PUBLICATIONS,
@@ -207,7 +211,7 @@ const createPublication = async (id, description) => {
 
     const length = response.data.publications.items.length;
     return length;
-}
+}*/
 
   return (
     <Modal
