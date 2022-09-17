@@ -138,10 +138,11 @@ export const ConfirmModal: FC<{
 
         <ModalFooter>
           <Button
-            variant="ghost"
+            variant="solid"
             onClick={buy}
             isLoading={loading}
             loadingText={"Loading"}
+            colorScheme="brand"
           >
             Buy
           </Button>
@@ -231,7 +232,7 @@ const Publication = ({ post }: Props) => {
                 <Text>{post.postLensID} @ proof of humanity</Text>
 
                 <HStack mt="5">
-                  <Button onClick={confirmOnOpen}>BUY</Button>
+                  <Button onClick={confirmOnOpen} colorScheme="brand">BUY</Button>
                   <Spacer />
                   <Text>
                     <Icon as={FcLike} /> 114
@@ -249,8 +250,8 @@ const Publication = ({ post }: Props) => {
 
               <HStack>
                 <Spacer />
-                <Button variant="outline">Like</Button>
-                <Button variant="outline">Share</Button>
+                <Button variant="outline" colorScheme="brand">Like</Button>
+                <Button variant="outline" colorScheme="brand">Share</Button>
               </HStack>
             </Box>
 

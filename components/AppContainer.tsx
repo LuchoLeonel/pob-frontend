@@ -37,7 +37,7 @@ const AppContainer = ({ posts }: Props) => {
         <>
           {publications.length > 0 &&
             publications.map((pub, i) => (
-              <Link href={"/pub/" + pub._id} key={pub.postLensID + "_" + i}>
+              <Link href={"/pub/" + pub._id} key={pub.postLensID + "_" + i} _hover={{ textDecoration: "none" }}>
                 <CardPost
                   key_={pub.postLensID}
                   profileId={pub.profileID}

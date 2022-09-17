@@ -92,7 +92,7 @@ const MovementCard = ({
         isLoading={buttonState.loading}
         disabled={buttonState.disabled}
         rightIcon={recived ? <CheckIcon /> : <DownloadIcon />}
-        colorScheme="teal"
+        colorScheme="brand"
         onClick={handleClickButton}
       >
         {recived ? "Recived" : "Withdraw"}

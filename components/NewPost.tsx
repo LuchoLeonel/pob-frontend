@@ -57,9 +57,9 @@ const PriceStepper: FC<{
 
   return (
     <HStack maxW="320px">
-      <Button colorScheme="pink" {...dec}>-</Button>
+      <Button colorScheme="brand" {...dec}>-</Button>
       <Input {...{ ...input, value: "MATIC " + v }} />
-      <Button colorScheme="pink" {...inc}>+</Button>
+      <Button colorScheme="brand" {...inc}>+</Button>
     </HStack>
   );
 };

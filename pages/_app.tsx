@@ -39,7 +39,7 @@ const Web3Provider: FC<{ children: ReactNode }> = ({ children }) => {
       <RainbowKitProvider
         chains={chains}
         theme={rainbowTheme({
-          accentColor: "#d53f8c",
+          accentColor: "#8FC837",
           borderRadius: "medium",
         })}
       >
