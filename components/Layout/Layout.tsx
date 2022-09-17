@@ -120,7 +120,7 @@ const Layout = ({ children }: Props) => {
           >
             <Link href={"/"}>
               <Heading cursor={"pointer"}>
-                <LogoIcon width="200px" height="84px"/>
+                <LogoIcon w={48}/>
               </Heading>
             </Link>
             <Button onClick={newPostModalOnOpen} colorScheme="pink" isDisabled={!isConnected}>Publish</Button>
@@ -166,7 +166,7 @@ const Layout = ({ children }: Props) => {
                   cursor={"pointer"}
                   display={{ base: "flex", md: "flex", lg: "none" }}
                 >
-                <LogoIcon width="200px" height="84px"/>
+                <LogoIcon w={32}/>
                 </Heading>
               </Link>
               <Flex
