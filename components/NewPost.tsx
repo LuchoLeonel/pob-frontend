@@ -110,6 +110,7 @@ export const NewPostModal: FC<{
         profileID: user,
         postLensID: publicationsLenght - 1,
         section: "Automoviles",
+        description
       }),
     }
 

@@ -10,9 +10,6 @@ import {
   VStack,
   Spinner,
   Flex,
-  FormControl,
-  FormLabel,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -32,16 +29,19 @@ import CommentBox from "../../components/CommentBox";
 import { FcLike, FcShare } from "react-icons/fc";
 import ImageViewer from "../../components/ImageViewer";
 import FileUpload from "../../styles/FileUpload";
+import { BACKEND_URL } from "../../utils/utils";
 
 type Props = {};
 
 type PublicationData = {
-  title: string;
-  description: string;
-  image_url: string;
-  pub_address: string;
-  pub_id: string;
-  price: string;
+    id: string;
+    profileId: string;
+    postLensId: string;
+    section: string;
+    title: string;
+    price: string;
+    image: string;
+    description: string;
 };
 
 export const ConfirmModal: FC<{
@@ -108,9 +108,9 @@ const Publication: NextPage = (props: Props) => {
 
     (async () => {
       try {
-        const response = await fetch(`https://pastebin.com/raw/${id}`);
+        const response = await fetch(`${BACKEND_URL}/post/${id}`);
         const result = await response.json();
-        setData(result);
+        setData(result.data[0]);
       } catch (error) {
         console.log(error);
       } finally {
@@ -168,7 +168,7 @@ const Publication: NextPage = (props: Props) => {
             <HStack>
               <Image
                 src={
-                  data.image_url ||
+                  data.image ||
                   "https://static.wikia.nocookie.net/espokemon/images/7/77/Pikachu.png"
                 }
                 alt="image"
@@ -179,7 +179,7 @@ const Publication: NextPage = (props: Props) => {
                   {data.title}
                 </Text>
                 <Text>{data.price}</Text>
-                <Text>{data.pub_address} @ proof of humanity</Text>
+                <Text>{data.postLensId} @ proof of humanity</Text>
 
                 <HStack mt="5">
                   <Button onClick={confirmOnOpen}>BUY</Button>
