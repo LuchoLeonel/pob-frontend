@@ -19,6 +19,7 @@ import {
   ModalOverlay,
   Textarea,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import Link from "next/link";
@@ -66,11 +67,13 @@ export const ConfirmModal: FC<{
   title: string;
   price: string;
   postLensId: string;
-}> = ({ isOpen, onClose, title, price, postLensId }) => {
+  postCreatorId: string;
+}> = ({ isOpen, onClose, title, price, postLensId, postCreatorId }) => {
   const [loading, setIsLoading] = useState(false);
   const { address, isConnected } = useAccount()
+  const [done, setDone] = useState(false);
 
-
+  const toast = useToast();
 
   console.log(title, price);
 
@@ -96,12 +99,24 @@ export const ConfirmModal: FC<{
     const priceInWei = ethers.utils.parseEther(price.toString());
     console.log(priceInWei);
     let response = await contractScrow.buy(
-      profileId,
+      postCreatorId, // usuario que creo el post
       postLensId,
       address,
       {value: priceInWei, gasLimit: 100000},
     );
     console.log(response);
+
+    const rc = await response.wait();
+
+    setDone(true);
+
+    toast({
+      title: 'Yeah!!!.',
+      description: "Done! " + rc.transactionHash,
+      status: 'success',
+      duration: 2000,
+      isClosable: true,
+    })
   }
 
   const getProfile = async () => {
@@ -143,6 +158,7 @@ export const ConfirmModal: FC<{
             isLoading={loading}
             loadingText={"Loading"}
             colorScheme="brand"
+            isDisabled={done}
           >
             Buy
           </Button>
@@ -202,6 +218,7 @@ const Publication = ({ post }: Props) => {
           title={post.title}
           price={post.price?.toString()}
           postLensId={post.postLensID}
+          postCreatorId={post.profileID}
         />
       )}
       <Container minW={"100%"} maxH={"85vh"} overflowY={"scroll"}>
