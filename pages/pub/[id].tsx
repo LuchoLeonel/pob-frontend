@@ -30,11 +30,17 @@ import { FcLike, FcShare } from "react-icons/fc";
 import ImageViewer from "../../components/ImageViewer";
 import FileUpload from "../../styles/FileUpload";
 import { BACKEND_URL } from "../../utils/utils";
+import {ethers} from 'ethers';
+import abi from '../../utils/abi.json';
+import {getSigner} from '../../utils/ethers-service'
+import { useAccount } from 'wagmi'
+import { GET_PROFILES_OWNED_BY, GET_PUBLICATION } from "../../api/querys";
 import { apolloClient, apolloClientNoSecure } from "../../api/apollo";
-import { GET_PUBLICATION } from "../../api/querys";
+
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { client } from "@wagmi/core/dist/declarations/src/client";
 import { gql } from "@apollo/client";
+declare var window: any;
 
 type Props = {
   post: Publications;
@@ -59,14 +65,59 @@ export const ConfirmModal: FC<{
   onClose: () => void;
   title: string;
   price: string;
-}> = ({ isOpen, onClose, title, price }) => {
+  postLensId: string;
+}> = ({ isOpen, onClose, title, price, postLensId }) => {
   const [loading, setIsLoading] = useState(false);
+  const { address, isConnected } = useAccount()
+
+
 
   console.log(title, price);
 
-  const buy = () => {
+  const buy = async () => {
+    console.log(postLensId)
+
     setIsLoading(true);
+    await ConnectScrow()
+    setIsLoading(false);
   };
+
+  const ConnectScrow = async () => {
+    const profile = await getProfile();
+    const profileId = profile[0].id;
+    const CONTRACT_SCROW_ADDRESS = "0x3F176e748068C96284f4626a27a19Ad1843C11Ca"
+    const ethersProvider = new ethers.providers.Web3Provider(window.ethereum);
+    const contractScrow = new ethers.Contract(
+      CONTRACT_SCROW_ADDRESS,
+      abi,
+      getSigner(ethersProvider)
+    )
+    console.log(price, profileId, postLensId, address)
+    const priceInWei = ethers.utils.parseEther(price.toString());
+    console.log(priceInWei);
+    let response = await contractScrow.buy(
+      profileId,
+      postLensId,
+      address,
+      {value: priceInWei, gasLimit: 100000},
+    );
+    console.log(response);
+  }
+
+  const getProfile = async () => {
+    const response = await apolloClient.query({
+        query: GET_PROFILES_OWNED_BY,
+        variables: {
+            request:{ 
+                ownedBy: address,
+                limit: 1,
+            }
+        },
+      });
+    let data = response.data.profiles.items;
+
+    return data;
+}
 
   return (
     <Modal
@@ -148,7 +199,8 @@ const Publication = ({ post }: Props) => {
           isOpen={confirmIsOpen}
           onClose={confirmOnClose}
           title={post.title}
-          price={post.price.toString()}
+          price={post.price?.toString()}
+          postLensId={post.postLensID}
         />
       )}
       <Container minW={"100%"} maxH={"85vh"} overflowY={"scroll"}>
@@ -256,29 +308,31 @@ export async function getStaticProps({ params }: { params: any }) {
   const response = await fetch(url);
   const response2 = await response.json();
   const data = response2.data[0];
-
-  const publication_id = data.postLensID;
-  var parsedPublicationId;
-  if (publication_id < 10) {
-    parsedPublicationId = "0x0" + publication_id;
-  } else {
-    parsedPublicationId = "0x" + publication_id;
+  if(data) {
+    const publication_id = data?.postLensID;
+    var parsedPublicationId;
+    if (publication_id < 10) {
+      parsedPublicationId = "0x0" + publication_id;
+    } else {
+      parsedPublicationId = "0x" + publication_id;
+    }
+    const publicationId = data.profileID + "-" + parsedPublicationId;
+    const responseGraphQL = await getPublication(publicationId);
+    const publicationInfo = responseGraphQL.data.publication;
+    data.mirrors = publicationInfo?.mirrors?.length === undefined ? 0 : publicationInfo?.mirrors?.length;
+    data.description =
+      publicationInfo?.description !== undefined
+        ? publicationInfo?.description
+        : null;
+    data.lensProfile = publicationInfo?.profile?.handle || null;
+    return {
+      props: { post: data },
+    };
   }
-  const publicationId = data.profileID + "-" + parsedPublicationId;
-  const responseGraphQL = await getPublication(publicationId);
-  const publicationInfo = responseGraphQL.data.publication;
-  data.mirrors = publicationInfo?.mirrors?.length === undefined ? 0 : publicationInfo?.mirrors?.length;
-  data.description =
-    publicationInfo?.description !== undefined
-      ? publicationInfo?.description
-      : null;
-  data.lensProfile = publicationInfo?.profile?.handle || null;
-
-  console.log(data);
-
   return {
-    props: { post: data },
+    props: { post: [] },
   };
+  
 }
 
 /**
