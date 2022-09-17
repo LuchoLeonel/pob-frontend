@@ -13,6 +13,7 @@ const colors = {
     transparent: "transparent",
     black: "black",
     white: "white",
+    gold: "#D69E2E",
   },
 };
 
